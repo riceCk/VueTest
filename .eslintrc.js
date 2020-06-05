@@ -1,11 +1,16 @@
+/*
+* "off" 或者 0    //关闭规则
+* "warn" 或者 1    //作为警告
+* "error" 或者 2    //作为一个错误
+*/
 module.exports = {
   root: true,
   env: {
-    node: true
+    browser: true,
   },
   'extends': [
     'plugin:vue/essential',
-    'standard',
+    'eslint:recommended'
   ],
   // required to lint *.vue files
   plugins: [
@@ -39,4 +44,4 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint',
   },
-}
+};

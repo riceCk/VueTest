@@ -178,7 +178,7 @@ export default {
      * @returns {*}
      */
     request(api, data, options, isMessageError = true) {
-        return this.request({
+        return request({
             api,
             data,
             options,
@@ -204,9 +204,9 @@ export default {
      * 转换错误
      * @param {*} error
      */
-    convertError(error) {
-        let ret = { code: -1 };
-        let response = error.response,
+    convertError (error) {
+        let ret = {code: -1};
+        let response = error.response;
         if (response) {
             ret.code = response.status;
             let url = response.config.url;
@@ -221,5 +221,5 @@ export default {
             ret.msg = '无法连接服务器，请检查您的网络';
         }
         return ret;
-    }
+    },
 }

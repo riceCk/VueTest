@@ -1,3 +1,4 @@
+<script src="../router/index.js"></script>
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
@@ -14,15 +15,14 @@ export default {
     msg: String
   },
   mounted () {
-    let api = {
-      path: '/epidemic/left/quezhenrenyuanfenbu',
-      method: 'get',
+    let quanguoyiqing = {
+      path: '/epidemic/left/quanguoyiqing',
+      method: 'POST',
     }
     let data = {
       aa: 'adsfasdfdas'
     }
-    let msg = this.$backend.getUrl(api, data)
-    console.log(msg)
+   this.$backend.request(quanguoyiqing, data)
   }
 }
 </script>
