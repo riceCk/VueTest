@@ -1,7 +1,9 @@
 const developHelper = require('./build/util/developHelper');
 const configDev = require('./vue.dev');
 const mockMiddleware = require('./build/plugins/mockMiddleware.js');
+const nginxMiddleware = require('./build/plugins/nginxMiddleware.js');
 const proxy = require('http-proxy-middleware');
+
 
 // XXX 检测运行模式
 let envMode = process.env.NODE_ENV_MOCK;
@@ -86,7 +88,21 @@ module.exports = {
 
   // 如果这个值是一个对象，则会通过 webpack-merge 合并到最终的配置中
   // 如果你需要基于环境有条件地配置行为，或者想要直接修改配置，那就换成一个函数 (该函数会在环境变量被设置之后懒执行)。该方法的第一个参数会收到已经解析好的配置。在函数内，你可以直接修改配置，或者返回一个将会被合并的对象
-  configureWebpack: {},
+  configureWebpack: {
+    resolve: { extensions: [".ts", ".tsx", ".js", ".json"] },    
+    module: {        
+      rules: [    
+        {    
+          test: /\.tsx?$/,    
+          loader: 'ts-loader',    
+          exclude: /node_modules/,    
+          options: {
+            appendTsSuffixTo: [/\.vue$/],    
+          }    
+        }        
+      ]    
+    }
+  },
 
   // 对内部的 webpack 配置（比如修改、增加Loader选项）(链式操作)
   chainWebpack: () => {
@@ -127,12 +143,12 @@ module.exports = {
         // app.use(bodyParser.json({type: 'application/*+json'}));
         // app.use(bodyParser.json());
         // XXX mock拦截器
-        // app.use(mockMiddleware(app));
+        app.use(mockMiddleware(app));
       }
 
       if (configDev.nginx) {
         // XXX nginx代理
-        // nginxMiddleware(app);
+        nginxMiddleware(app);
       }
     },
   },

@@ -31,16 +31,11 @@
     },
     methods: {
       async getUserSig() {
-        const userSig = {
-          path: '/charge/api/vod/userSig',
-          method: 'GET',
-          server: 'trtc'
-        }
         const pram = {
           appid: this.createForm.sdkAppId,
           userid: this.createForm.userId
         }
-        const {data} = await this.$backend.request(userSig, pram)
+        const {data} = await this.$backend.request(this.$api.test.userSig, pram)
         this.createForm.userSig = data
         this.createClient(2222)
       },

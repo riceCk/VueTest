@@ -35,10 +35,14 @@ function getApiConf(value) {
         if (!value.path) {
             throw new Error('Api配置错误，缺少path属性' + JSON.stringify(value));
         }
+        if (!value.isFormData) {
+            value.isFormData = false
+        }
         return {
             path: value.path,
             method: value.method.toLowerCase(),
             server: value.server,
+            isFormData: value.isFormData
         };
     }
 }
@@ -89,7 +93,7 @@ function request(settings) {
 
     api = getApiConf(api);
     let url = getUrl(api);
-
+    let isFormData = api.isFormData// true 表单类型，false对象类型
     let isDataAsQuery = (api.method === 'get' || api.method === 'delete') && !query && data;
     if (isDataAsQuery) {
         query = data;
@@ -105,6 +109,7 @@ function request(settings) {
         url,
         responseType: settings.responseType,
         params,
+        isFormData,
         data,
         options
     })
@@ -137,13 +142,13 @@ function request(settings) {
  *  data 请求参数放请求体里
  * } 
  */
-function createAxiosInstance({ url, responseType, params, data, options }) {
+function createAxiosInstance({ url, responseType, params, data, isFormData, options }) {
     return axios.create({
         baseURL: url,
         timeout: 45000, // 请求超时时长
         headers: Object.assign({
             'X-Requested-With': 'XMLHttpRequest',
-            'Content-Type': 'application/json',
+            'Content-Type': isFormData ? 'application/x-www-form-urlencoded' : 'application/json',
         }, options),
         responseType: responseType | 'json',
         params: params || {},

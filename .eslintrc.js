@@ -10,7 +10,6 @@ module.exports = {
   },
   'extends': [
     'plugin:vue/essential',
-    'eslint:recommended'
   ],
   // required to lint *.vue files
   plugins: [
