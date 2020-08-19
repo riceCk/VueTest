@@ -1,99 +1,164 @@
 <!--
  * @Author : 陈凯
  * @Date : 2020/06/30
- * @Content : 折线图和柱状图切换
+ * @Content : 分装charts
 -->
 <template>
+  <div class="barLine" @click="onMaskTable">
     <div :id="eChartId" :style="chartStyle"></div>
+    <edit-charts
+      v-model="dialogEdit"
+      :styleOption="styleOption"
+      :hiddenType="hiddenType"
+      :edi-table-data="updateTable"
+      :styleData="styleData"
+      :table-column="tableColumn"
+      @handlerEditCharts="handlerEditCharts"
+    ></edit-charts>
+  </div>
 </template>
 
 <script>
 import echarts from "echarts";
-import {drawLineChart} from './common/chartsOption'
+import { drawLineChart, histogramChart } from "./common/chartsOption.js";
+import editCharts from "./common/editCharts";
+import { CharlesData } from "./common/utils/charlesData";
 export default {
+  components: {
+    editCharts,
+  },
   props: {
     eChartId: {
       type: String,
-      default: "myChart"
+      default: "myChart",
     },
     chartStyle: {
       type: String,
-      default: "width:400px;height:300px;"
+      default: "width:600px;height:300px;",
     },
     // eCharts外置数据
     chartData: {
       type: Object,
       default() {
         return {
-          color: ["#F49D1A", "#E23030"],
-          fontSize: "18",
-          titleText: "显示标题",
-          legendTop: "0",
-          legendLeft: "3",
-          legendRight: "",
-          legendData: ["全部", "负面"],
-          xAxisData: ["06/07", "06/08", "06/09", "06/10", "06/11"],
-          seriesData: [
-            {
-              name: "全部",
-              type: "line",
-              smooth: true,
-              itemStyle: {
-                normal: {
-                  areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                      {
-                        // 1代表上面
-                        offset: 1,
-                        color: "#F6FDFF"
-                      },
-                      {
-                        offset: 0,
-                        color: "#F49D1A"
-                      }
-                    ])
-                  }
-                }
+          lineOption: {
+            color: ["#F49D1A", "#E23030"],
+            fontSize: "18",
+            titleText: "显示标题",
+            legendTop: "0",
+            legendLeft: "3",
+            legendRight: "",
+            legendData: ["全部", "负面"],
+            xAxisData: ["06/07", "06/08", "06/09", "06/10", "06/11"],
+            seriesData: [
+              {
+                name: "全部",
+                type: "line",
+                smooth: true,
+                itemStyle: {
+                  normal: {
+                    areaStyle: {
+                      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        {
+                          // 1代表上面
+                          offset: 1,
+                          color: "#F6FDFF",
+                        },
+                        {
+                          offset: 0,
+                          color: "#F49D1A",
+                        },
+                      ]),
+                    },
+                  },
+                },
+                areaStyle: {
+                  normal: {},
+                },
+                data: [],
               },
-              areaStyle: {
-                normal: {}
+              {
+                name: "负面",
+                type: "line",
+                smooth: true,
+                itemStyle: {
+                  normal: {
+                    areaStyle: {
+                      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        {
+                          // 1代表上面
+                          offset: 1,
+                          color: "#F6FDFF",
+                        },
+                        {
+                          offset: 0,
+                          color: "#f40",
+                        },
+                      ]),
+                    },
+                  },
+                },
+                areaStyle: {
+                  normal: {},
+                },
+                data: [],
               },
-              data: [300, 200, 150, 60, 256]
-            },
-            {
-              name: "负面",
-              type: "line",
-              smooth: true,
-              itemStyle: {
-                normal: {
-                  areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                      {
-                        // 1代表上面
-                        offset: 1,
-                        color: "#F6FDFF"
-                      },
-                      {
-                        offset: 0,
-                        color: "#f40"
-                      }
-                    ])
-                  }
-                }
-              },
-              areaStyle: {
-                normal: {}
-              },
-              data: [265, 255, 300, 105, 52]
-            }
-          ]
+            ],
+          },
         };
+      },
+    },
+    // 图表数据
+    ediTableData: {
+      type: Array,
+    },
+    // 图标数据表头
+    tableColumn: {
+      type: Object,
+    },
+    styleOption: {
+      type: Array,
+      default () {
+        return [
+        {
+          value: "lineOption",
+          label: "折线图",
+        },
+        {
+          value: "pieOption",
+          label: "柱状图",
+        },
+      ]
       }
-    }
+    },
+    hiddenType: {
+      type: Array,
+      default() {
+        return [
+          {
+          value: "yAxisGrid",
+          label: "隐藏网格",
+        },
+        {
+          value: "param",
+          label: "隐藏数据",
+        },
+        ]
+      }
+    },
   },
   data() {
     return {
-      myChart: null
+      myChart: null,
+      dialogEdit: false, // 回显开关
+      // 回显的编辑table参数
+      updateTable: [],
+      // 回显编辑form样式参数
+      styleData: {
+        styleRaido: "lineOption",
+        multiple: 1,
+      },
+      
     };
   },
   watch: {
@@ -105,91 +170,55 @@ export default {
           } else if (oldValue) {
             this.chartData = oldValue;
           }
-          this.renderingData(this.chartData);
+          this.renderingData(this.chartData[this.styleData.styleRaido], this.styleData.styleRaido);
         } else {
           this.initChart();
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   mounted() {
+    this.initData();
     this.initChart();
   },
   methods: {
+    initData() {
+      this.updateTable = JSON.parse(JSON.stringify(this.ediTableData));
+    },
+    // 初始化渲染charts
     initChart() {
       this.myChart = echarts.init(document.getElementById(this.eChartId));
-      if (this.chartData) {
-        this.renderingData(this.chartData);
+      if (this.chartData[this.styleData.styleRaido]) {
+        this.renderingData(this.chartData[this.styleData.styleRaido], this.styleData.styleRaido);
       }
     },
-    renderingData(chartData) {
-      const option = drawLineChart({
-          color: ["#F49D1A", "#E23030"],
-          magicType: {type: ["bar", "line"]},
-          fontSize: "18",
-          titleText: "显示标题",
-          legendTop: "0",
-          legendLeft: "3",
-          legendData: ["全部", "负面"],
-          xAxisData: ["06/07", "06/08", "06/09", "06/10", "06/11"],
-          seriesData: [
-            {
-              name: "全部",
-              type: "line",
-              smooth: true,
-              itemStyle: {
-                normal: {
-                  areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                      {
-                        // 1代表上面
-                        offset: 1,
-                        color: "#F6FDFF"
-                      },
-                      {
-                        offset: 0,
-                        color: "#F49D1A"
-                      }
-                    ])
-                  }
-                }
-              },
-              areaStyle: {
-                normal: {}
-              },
-              data: [300, 200, 150, 60, 256]
-            },
-            {
-              name: "负面",
-              type: "line",
-              smooth: true,
-              itemStyle: {
-                normal: {
-                  areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                      {
-                        // 1代表上面
-                        offset: 1,
-                        color: "#F6FDFF"
-                      },
-                      {
-                        offset: 0,
-                        color: "#f40"
-                      }
-                    ])
-                  }
-                }
-              },
-              areaStyle: {
-                normal: {}
-              },
-              data: [265, 255, 300, 105, 52]
-            }
-          ]
-      })
-      this.myChart.setOption(option);
+    // 渲染charts
+    renderingData(chartData, type = "lineOption") {
+      let option;
+      if (type === "lineOption") {
+        option = drawLineChart(chartData);
+      } else {
+        option = histogramChart(chartData);
+      }
+      this.myChart.setOption(option, true);
     },
-  }
+    // 点击编辑
+    onMaskTable() {
+      this.dialogEdit = true;
+    },
+    /**
+     * 编辑退出
+     * v: {updateTable, styleData}
+     * @param updateTable  图表数据
+     * @param styleData  图表样式
+     */
+    handlerEditCharts(v) {
+      const { updateTable, styleData } = v;
+      this.dialogEdit = false;
+      this.updateTable = updateTable;
+      this.$emit('handlerEditCharts', v)
+    },
+  },
 };
 </script>

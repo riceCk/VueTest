@@ -13,7 +13,7 @@
 
 <script>
 import echarts from "echarts";
-import {drawPieChart, drawLineChart} from './common/chartsOption'
+import {drawPieChart, drawLineChart} from './common/chartsOption.js'
 export default {
   props: {
     eChartId: {

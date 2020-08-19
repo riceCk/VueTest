@@ -152,7 +152,8 @@ function createAxiosInstance({ url, responseType, params, data, isFormData, opti
         }, options),
         responseType: responseType | 'json',
         params: params || {},
-        data: data
+        data: data,
+        
     })
 }
 

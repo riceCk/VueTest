@@ -1,4 +1,3 @@
-import {lineOption, pieOption} from './chartsInterface'
 
 /**
  * 配置折线图
@@ -12,7 +11,7 @@ import {lineOption, pieOption} from './chartsInterface'
  * @param fontSize 字体大小可选
  * @param xAxisData x轴类容
  * @param seriesData 整体y轴样式
- * 
+ * @param yAxisGrid 是否去网格线
  */
 export function drawLineChart ({
   color = ["#F49D1A", "#E23030"], 
@@ -23,8 +22,9 @@ export function drawLineChart ({
   legendData = ["全部", "负面"],
   fontSize,
   xAxisData = ["06/07", "06/08", "06/09", "06/10", "06/11"],
-  seriesData
-}: lineOption) {
+  seriesData,
+  yAxisGrid = true
+}) {
   return {
     color,
     tooltip: {
@@ -51,15 +51,11 @@ export function drawLineChart ({
       {
         type: "category",
         boundaryGap: false,
-        splitLine: {
-          show: false
-        },
         axisLabel: {
           textStyle: {
             fontSize: fontSize || "16"
           }
         },
-        splitArea: { show: false }, //去除网格区域
         data: xAxisData || []
       }
     ],
@@ -67,7 +63,7 @@ export function drawLineChart ({
       {
         type: "value",
         splitLine: {
-          show: false
+          show: yAxisGrid
         },
         splitArea: { show: false }, //去除网格区域
         axisLabel: {
@@ -93,7 +89,7 @@ export function drawPieChart ({
   legendData = ["直接访问", "邮件营销"],
   seriesRadius,
   seriesData 
-}: pieOption) {
+}) {
   return {
     tooltip: {
       trigger: "item",
@@ -128,4 +124,91 @@ export function drawPieChart ({
       }
     ]
   };
+}
+
+/**
+ * 柱状图
+ * @param xAxisData 
+ * @param seriesColor 柱状图颜色
+ * @param seriesData 柱状图数据
+ */
+export function histogramChart ({
+  xAxisData = ["微信", "百度搜索", "百度贴吧"],
+  seriesColor = ['#F49D1A', '#F49D1A','#F49D1A'],
+  seriesData = [{
+    name: "微信",
+    value: 21327
+  },{
+    name: "百度搜索",
+    value: 32423
+  },{
+    name: "百度贴吧",
+    value: 12153
+  },]
+}) {
+  return {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { // 坐标轴指示器，坐标轴触发有效
+        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+      }
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {
+          title: '下载'
+        }
+      }
+    },
+    grid: {
+      left: '2%',
+      right: '2%',
+      top: '5%',
+      bottom: 30,
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: xAxisData,
+        axisLabel: {
+          interval: 0,
+          textStyle: {
+            fontSize: '18',
+          },
+          formatter (val) {
+            if (!val) {
+              return val;
+            }
+            return val.length > 8 ? val.substring(0, 8).split('').join('\n') + '\n...' : val.split('').join('\n');
+          }
+        }
+      },
+    ],
+    yAxis: [
+      {
+        type: "value",
+        axisLabel: {
+          textStyle: {
+            fontSize: '18',
+          },
+        }
+      }
+    ],
+    series: [
+      {
+        type: 'bar',
+        barWidth: 20,
+        data: seriesData || [],
+        itemStyle: {
+          normal: {
+            color (params) {
+              const colorList = seriesColor || ['#F49D1A'];
+              return colorList[params.dataIndex];
+            }
+          }
+        }
+      }
+    ]
+  }
 }

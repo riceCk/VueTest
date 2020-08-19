@@ -25,6 +25,13 @@ module.exports = {
       path: '/imonitor/home/negative/statistics',
       method: 'POST',
       server: 'newClient'
-    }
+    },
+    // 获取舆情热度趋势和舆情发展趋势图
+    timeline: {
+      path: '/parentevents_statistic/timeline',
+      method: 'post',
+      isFormData: true,
+      server: 'IMonitor'
+    },
   }
 }
