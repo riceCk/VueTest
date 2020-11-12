@@ -1360,7 +1360,7 @@ vjs.Component = vjs.CoreObject.extend({
 });
 
 /**
- * Dispose of the component and all child components
+ * Dispose of the charts and all child components
  */
 vjs.Component.prototype.dispose = function(){
   this.trigger('dispose');
@@ -1400,7 +1400,7 @@ vjs.Component.prototype.dispose = function(){
 vjs.Component.prototype.player_ = true;
 
 /**
- * Return the component's player
+ * Return the charts's player
  *
  * @return {vjs.Player}
  */
@@ -1409,7 +1409,7 @@ vjs.Component.prototype.player = function(){
 };
 
 /**
- * The component's options object
+ * The charts's options object
  *
  * @type {Object}
  * @private
@@ -1424,7 +1424,7 @@ vjs.Component.prototype.options_;
  *
  * This is used for merging options for child components. We
  * want it to be easy to override individual options on a child
- * component without having to rewrite all the other default options.
+ * charts without having to rewrite all the other default options.
  *
  *     Parent.prototype.options_ = {
  *       children: {
@@ -1464,7 +1464,7 @@ vjs.Component.prototype.options = function(obj){
 };
 
 /**
- * The DOM element for the component
+ * The DOM element for the charts
  *
  * @type {Element}
  * @private
@@ -1472,7 +1472,7 @@ vjs.Component.prototype.options = function(obj){
 vjs.Component.prototype.el_;
 
 /**
- * Create the component's DOM element
+ * Create the charts's DOM element
  *
  * @param  {String=} tagName  Element's node type. e.g. 'div'
  * @param  {Object=} attributes An object of element attributes that should be set on the element
@@ -1483,7 +1483,7 @@ vjs.Component.prototype.createEl = function(tagName, attributes){
 };
 
 /**
- * Get the component's DOM element
+ * Get the charts's DOM element
  *
  *     var domEl = myComponent.el();
  *
@@ -1503,7 +1503,7 @@ vjs.Component.prototype.el = function(){
 vjs.Component.prototype.contentEl_;
 
 /**
- * Return the component's DOM element for embedding content.
+ * Return the charts's DOM element for embedding content.
  * Will either be el_ or a new element defined in createEl.
  *
  * @return {Element}
@@ -1513,7 +1513,7 @@ vjs.Component.prototype.contentEl = function(){
 };
 
 /**
- * The ID for the component
+ * The ID for the charts
  *
  * @type {String}
  * @private
@@ -1521,7 +1521,7 @@ vjs.Component.prototype.contentEl = function(){
 vjs.Component.prototype.id_;
 
 /**
- * Get the component's ID
+ * Get the charts's ID
  *
  *     var id = myComponent.id();
  *
@@ -1532,7 +1532,7 @@ vjs.Component.prototype.id = function(){
 };
 
 /**
- * The name for the component. Often used to reference the component.
+ * The name for the charts. Often used to reference the charts.
  *
  * @type {String}
  * @private
@@ -1540,7 +1540,7 @@ vjs.Component.prototype.id = function(){
 vjs.Component.prototype.name_;
 
 /**
- * Get the component's name. The name is often used to reference the component.
+ * Get the charts's name. The name is often used to reference the charts.
  *
  *     var name = myComponent.name();
  *
@@ -1578,7 +1578,7 @@ vjs.Component.prototype.children = function(){
 vjs.Component.prototype.childIndex_;
 
 /**
- * Returns a child component with the provided ID
+ * Returns a child charts with the provided ID
  *
  * @return {vjs.Component}
  */
@@ -1595,7 +1595,7 @@ vjs.Component.prototype.getChildById = function(id){
 vjs.Component.prototype.childNameIndex_;
 
 /**
- * Returns a child component with the provided ID
+ * Returns a child charts with the provided ID
  *
  * @return {vjs.Component}
  */
@@ -1604,15 +1604,15 @@ vjs.Component.prototype.getChild = function(name){
 };
 
 /**
- * Adds a child component inside this component
+ * Adds a child charts inside this charts
  *
  *     myComponent.el();
- *     // -> <div class='my-component'></div>
+ *     // -> <div class='my-charts'></div>
  *     myComonent.children();
  *     // [empty array]
  *
  *     var myButton = myComponent.addChild('MyButton');
- *     // -> <div class='my-component'><div class="my-button">myButton<div></div>
+ *     // -> <div class='my-charts'><div class="my-button">myButton<div></div>
  *     // -> myButton === myComonent.children()[0];
  *
  * Pass in options for child constructors and options for children of the child
@@ -1628,13 +1628,13 @@ vjs.Component.prototype.getChild = function(name){
  *
  * @param {String|vjs.Component} child The class name or instance of a child to add
  * @param {Object=} options Options, including options to be passed to children of the child.
- * @return {vjs.Component} The child component (created by this process if a string was used)
+ * @return {vjs.Component} The child charts (created by this process if a string was used)
  * @suppress {accessControls|checkRegExp|checkTypes|checkVars|const|constantProperty|deprecated|duplicate|es5Strict|fileoverviewTags|globalThis|invalidCasts|missingProperties|nonStandardJsDocs|strictModuleDepCheck|undefinedNames|undefinedVars|unknownDefines|uselessCode|visibility}
  */
 vjs.Component.prototype.addChild = function(child, options){
   var component, componentClass, componentName, componentId;
 
-  // If string, create new component with options
+  // If string, create new charts with options
   if (typeof child === 'string') {
 
     componentName = child;
@@ -1654,7 +1654,7 @@ vjs.Component.prototype.addChild = function(child, options){
     // Every class should be exported, so this should never be a problem here.
     component = new window['videojs'][componentClass](this.player_ || this, options);
 
-  // child is a component instance
+  // child is a charts instance
   } else {
     component = child;
   }
@@ -1665,8 +1665,8 @@ vjs.Component.prototype.addChild = function(child, options){
     this.childIndex_[component.id()] = component;
   }
 
-  // If a name wasn't used to create the component, check if we can use the
-  // name function of the component
+  // If a name wasn't used to create the charts, check if we can use the
+  // name function of the charts
   componentName = componentName || (component.name && component.name());
 
   if (componentName) {
@@ -1684,8 +1684,8 @@ vjs.Component.prototype.addChild = function(child, options){
 };
 
 /**
- * Remove a child component from this component's list of children, and the
- * child component's element from this component's element
+ * Remove a child charts from this charts's list of children, and the
+ * child charts's element from this charts's element
  *
  * @param  {vjs.Component} component Component to remove
  */
@@ -1769,7 +1769,7 @@ vjs.Component.prototype.buildCSSClass = function(){
 ============================================================================= */
 
 /**
- * Add an event listener to this component's element
+ * Add an event listener to this charts's element
  *
  *     var myFunc = function(){
  *       var myPlayer = this;
@@ -1778,7 +1778,7 @@ vjs.Component.prototype.buildCSSClass = function(){
  *
  *     myPlayer.on("eventName", myFunc);
  *
- * The context will be the component.
+ * The context will be the charts.
  *
  * @param  {String}   type The event type e.g. 'click'
  * @param  {Function} fn   The event listener
@@ -1790,7 +1790,7 @@ vjs.Component.prototype.on = function(type, fn){
 };
 
 /**
- * Remove an event listener from the component's element
+ * Remove an event listener from the charts's element
  *
  *     myComponent.off("eventName", myFunc);
  *
@@ -1832,8 +1832,8 @@ vjs.Component.prototype.trigger = function(type, event){
 /* Ready
 ================================================================================ */
 /**
- * Is the component loaded
- * This can mean different things depending on the component.
+ * Is the charts loaded
+ * This can mean different things depending on the charts.
  *
  * @private
  * @type {Boolean}
@@ -1861,7 +1861,7 @@ vjs.Component.prototype.isReadyOnInitFinish_ = true;
 vjs.Component.prototype.readyQueue_;
 
 /**
- * Bind a listener to the component's ready state
+ * Bind a listener to the charts's ready state
  *
  * Different from event listeners in that if the ready event has already happend
  * it will trigger the function immediately.
@@ -1911,7 +1911,7 @@ vjs.Component.prototype.triggerReady = function(){
 ============================================================================= */
 
 /**
- * Add a CSS class name to the component's element
+ * Add a CSS class name to the charts's element
  *
  * @param {String} classToAdd Classname to add
  * @return {vjs.Component}
@@ -1922,7 +1922,7 @@ vjs.Component.prototype.addClass = function(classToAdd){
 };
 
 /**
- * Remove a CSS class name from the component's element
+ * Remove a CSS class name from the charts's element
  *
  * @param {String} classToRemove Classname to remove
  * @return {vjs.Component}
@@ -1933,7 +1933,7 @@ vjs.Component.prototype.removeClass = function(classToRemove){
 };
 
 /**
- * Show the component element if hidden
+ * Show the charts element if hidden
  *
  * @return {vjs.Component}
  */
@@ -1943,7 +1943,7 @@ vjs.Component.prototype.show = function(){
 };
 
 /**
- * Hide the component element if hidden
+ * Hide the charts element if hidden
  *
  * @return {vjs.Component}
  */
@@ -1977,7 +1977,7 @@ vjs.Component.prototype.unlockShowing = function(){
 };
 
 /**
- * Disable component by making it unshowable
+ * Disable charts by making it unshowable
  */
 vjs.Component.prototype.disable = function(){
   this.hide();
@@ -1985,7 +1985,7 @@ vjs.Component.prototype.disable = function(){
 };
 
 /**
- * Set or get the width of the component (CSS values)
+ * Set or get the width of the charts (CSS values)
  *
  * Video tag width/height only work in pixels. No percents.
  * But allowing limited percents use. e.g. width() will return number+%, not computed width
@@ -2000,11 +2000,11 @@ vjs.Component.prototype.width = function(num, skipListeners){
 };
 
 /**
- * Get or set the height of the component (CSS values)
+ * Get or set the height of the charts (CSS values)
  *
- * @param  {Number|String=} num     New component height
+ * @param  {Number|String=} num     New charts height
  * @param  {Boolean=} skipListeners Skip the resize event trigger
- * @return {vjs.Component} The component if the height was set
+ * @return {vjs.Component} The charts if the height was set
  * @return {Number|String} The height if it wasn't set
  */
 vjs.Component.prototype.height = function(num, skipListeners){
@@ -2016,7 +2016,7 @@ vjs.Component.prototype.height = function(num, skipListeners){
  *
  * @param  {Number|String} width
  * @param  {Number|String} height
- * @return {vjs.Component} The component
+ * @return {vjs.Component} The charts
  */
 vjs.Component.prototype.dimensions = function(width, height){
   // Skip resize listeners on width for optimization
@@ -2037,7 +2037,7 @@ vjs.Component.prototype.dimensions = function(width, height){
  * @param  {String} widthOrHeight  'width' or 'height'
  * @param  {Number|String=} num     New dimension
  * @param  {Boolean=} skipListeners Skip resize event trigger
- * @return {vjs.Component} The component if a dimension was set
+ * @return {vjs.Component} The charts if a dimension was set
  * @return {Number|String} The dimension if nothing was set
  * @private
  */
@@ -2056,7 +2056,7 @@ vjs.Component.prototype.dimension = function(widthOrHeight, num, skipListeners){
     // skipListeners allows us to avoid triggering the resize event when setting both width and height
     if (!skipListeners) { this.trigger('resize'); }
 
-    // Return component
+    // Return charts
     return this;
   }
 
@@ -2072,7 +2072,7 @@ vjs.Component.prototype.dimension = function(widthOrHeight, num, skipListeners){
     return parseInt(val.slice(0,pxIndex), 10);
 
   // No px so using % or no style was set, so falling back to offsetWidth/height
-  // If component has display:none, offset will return 0
+  // If charts has display:none, offset will return 0
   // TODO: handle display:none and no dimension style using px
   } else {
 
@@ -2094,7 +2094,7 @@ vjs.Component.prototype.dimension = function(widthOrHeight, num, skipListeners){
 };
 
 /**
- * Fired when the width and/or height of the component changes
+ * Fired when the width and/or height of the charts changes
  * @event resize
  */
 vjs.Component.prototype.onResize;
@@ -2104,7 +2104,7 @@ vjs.Component.prototype.onResize;
  *
  * This is used to support toggling the controls through a tap on the video.
  *
- * We're requireing them to be enabled because otherwise every component would
+ * We're requireing them to be enabled because otherwise every charts would
  * have this extra overhead unnecessarily, on mobile devices where extra
  * overhead is especially bad.
  * @private
@@ -2461,7 +2461,7 @@ vjs.SliderHandle.prototype.createEl = function(type, props) {
 /* Menu
 ================================================================================ */
 /**
- * The Menu component is used to build pop up menus, including subtitle and
+ * The Menu charts is used to build pop up menus, including subtitle and
  * captions selection menus.
  *
  * @param {vjs.Player|Object} player
@@ -2473,7 +2473,7 @@ vjs.Menu = vjs.Component.extend();
 
 /**
  * Add a menu item to the menu
- * @param {Object|String} component Component or component type to add
+ * @param {Object|String} component Component or charts type to add
  */
 vjs.Menu.prototype.addItem = function(component){
   this.addChild(component);
@@ -2505,7 +2505,7 @@ vjs.Menu.prototype.createEl = function(){
 };
 
 /**
- * The component for a menu item. `<li>`
+ * The charts for a menu item. `<li>`
  *
  * @param {vjs.Player|Object} player
  * @param {Object=} options
@@ -2727,7 +2727,7 @@ vjs.Player = vjs.Component.extend({
     // May be turned back on by HTML5 tech if nativeControlsForTouch is true
     tag.controls = false;
 
-    // Run base component initializing with new options.
+    // Run base charts initializing with new options.
     // Builds the element through createEl()
     // Inits and embeds any child components in opts
     vjs.Component.call(this, this, options, ready);
@@ -4304,7 +4304,7 @@ vjs.FullscreenToggle.prototype.onClick = function(){
   }
 };
 /**
- * The Progress Control component contains the seek bar, load progress,
+ * The Progress Control charts contains the seek bar, load progress,
  * and play progress
  *
  * @param {vjs.Player|Object} player
@@ -4414,12 +4414,10 @@ vjs.SeekBar.prototype.onMouseMove = function(event){
 };
 
 vjs.SeekBar.prototype.onMouseUp = function(event){
-    debugger
   vjs.Slider.prototype.onMouseUp.call(this, event);
 
   this.player_.scrubbing = false;
   if (this.videoWasPlaying) {
-      debugger
     this.player_.play();
   }
 };
@@ -4506,7 +4504,7 @@ vjs.SeekHandle.prototype.createEl = function(){
   });
 };
 /**
- * The component for controlling the volume level
+ * The charts for controlling the volume level
  *
  * @param {vjs.Player|Object} player
  * @param {Object=} options
@@ -4647,7 +4645,7 @@ vjs.VolumeLevel.prototype.createEl = function(){
    });
  };
 /**
- * A button component for muting the audio
+ * A button charts for muting the audio
  *
  * @param {vjs.Player|Object} player
  * @param {Object=} options
@@ -4767,7 +4765,7 @@ vjs.VolumeMenuButton.prototype.update = vjs.MuteToggle.prototype.update;
 /* Poster Image
 ================================================================================ */
 /**
- * The component that handles showing the poster image.
+ * The charts that handles showing the poster image.
  *
  * @param {vjs.Player|Object} player
  * @param {Object=} options
@@ -4978,7 +4976,7 @@ vjs.MediaTechController.prototype.addControlsListeners = function(){
   this.on('touchcancel', preventBubble);
   this.on('touchend', preventBubble);
 
-  // Turn on component tap events
+  // Turn on charts tap events
   this.emitTapEvents();
 
   // The tap listener needs to come after the touchend listener because the tap
@@ -5897,7 +5895,7 @@ vjs.Flash.isStreamingSrc = function(src) {
   return vjs.Flash.RTMP_RE.test(src);
 };
 /**
- * The Media Loader is the component that decides which playback technology to load
+ * The Media Loader is the charts that decides which playback technology to load
  * when the player is initialized.
  *
  * @constructor
@@ -6603,7 +6601,7 @@ vjs.TextTrack.prototype.reset = function(){
 
 // Create specific track types
 /**
- * The track component for managing the hiding and showing of captions
+ * The track charts for managing the hiding and showing of captions
  *
  * @constructor
  */
@@ -6613,7 +6611,7 @@ vjs.CaptionsTrack.prototype.kind_ = 'captions';
 // to be available on global object. e.g. new window['videojs'][Kind + 'Track']
 
 /**
- * The track component for managing the hiding and showing of subtitles
+ * The track charts for managing the hiding and showing of subtitles
  *
  * @constructor
  */
@@ -6621,7 +6619,7 @@ vjs.SubtitlesTrack = vjs.TextTrack.extend();
 vjs.SubtitlesTrack.prototype.kind_ = 'subtitles';
 
 /**
- * The track component for managing the hiding and showing of chapters
+ * The track charts for managing the hiding and showing of chapters
  *
  * @constructor
  */
@@ -6634,7 +6632,7 @@ vjs.ChaptersTrack.prototype.kind_ = 'chapters';
 // Global container for both subtitle and captions text. Simple div container.
 
 /**
- * The component for displaying text track cues
+ * The charts for displaying text track cues
  *
  * @constructor
  */
@@ -6791,7 +6789,7 @@ vjs.TextTrackButton.prototype.createItems = function(){
 };
 
 /**
- * The button component for toggling and selecting captions
+ * The button charts for toggling and selecting captions
  *
  * @constructor
  */
@@ -6807,7 +6805,7 @@ vjs.CaptionsButton.prototype.buttonText = 'Captions';
 vjs.CaptionsButton.prototype.className = 'vjs-captions-button';
 
 /**
- * The button component for toggling and selecting subtitles
+ * The button charts for toggling and selecting subtitles
  *
  * @constructor
  */
@@ -6825,7 +6823,7 @@ vjs.SubtitlesButton.prototype.className = 'vjs-subtitles-button';
 // Chapters act much differently than other text tracks
 // Cues are navigation vs. other tracks of alternative languages
 /**
- * The button component for toggling and selecting chapters
+ * The button charts for toggling and selecting chapters
  *
  * @constructor
  */

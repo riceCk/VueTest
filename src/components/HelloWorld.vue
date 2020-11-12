@@ -98,7 +98,7 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add "scoped" attribute to limit CSS to this charts only -->
 <style scoped>
 .wrapper {
   display: flex;

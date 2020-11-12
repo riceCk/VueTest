@@ -1,6 +1,5 @@
 <template>
   <div class="table">
-    1111111111111111
     <table-comp :columns="tableColumns"
                 :loading="loading"
                 :props="tableProps" />

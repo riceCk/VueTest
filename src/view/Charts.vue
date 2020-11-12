@@ -1,19 +1,31 @@
 <template>
-  <div class="year-chart">
-    <div v-eCharts="optionConfiguration" class="chart">
-    </div>
-  </div>
+  <newEditChart></newEditChart>
 </template>
 
-<script>
-import eCharts from '../components/echarts/vEcharts';
 
-export default {
-  methods: {
-    optionConfiguration() {
-      
+<script>
+  import newEditChart from '../components/newEditChart/index'
+  export default {
+    name: 'charts',
+    components: {
+      newEditChart
+    },
+    props: {},
+    data() {
+      return {
+        activeName: '1',
+        eChartId: 'eChartId'
+      }
+    },
+    computed: {},
+    watch: {},
+    created() {
+    },
+    mounted() {
+
+    },
+    methods: {
+
     }
-  },
-  directives: { eCharts },
-}
+  }
 </script>

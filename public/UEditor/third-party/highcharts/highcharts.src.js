@@ -5346,7 +5346,7 @@ var VMLRendererExtension = { // inherit SVGRenderer
 			}
 
 		// if the color is an rgba color, split it and add a fill node
-		// to hold the opacity component
+		// to hold the opacity charts
 		} else if (regexRgba.test(color) && elem.tagName !== 'IMG') {
 
 			colorObject = Color(color);
@@ -16356,7 +16356,7 @@ var PieSeries = {
 			endAngleRad = series.endAngleRad = mathPI / 180 * ((options.endAngle || (startAngle + 360)) - 90), // docs
 			circ = endAngleRad - startAngleRad, //2 * mathPI,
 			points = series.points,
-			radiusX, // the x component of the radius vector for a given point
+			radiusX, // the x charts of the radius vector for a given point
 			radiusY,
 			labelDistance = options.dataLabels.distance,
 			ignoreHiddenPoint = options.ignoreHiddenPoint,

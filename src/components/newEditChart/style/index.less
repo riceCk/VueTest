@@ -1,0 +1,91 @@
+* {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.chart-wrapper {
+  display: flex;
+  padding: 30px;
+  border: 1px solid #EBEDF0;
+  box-shadow: 0 0 20px 0 rgba(195, 198, 204, 0.5);
+  table,
+  table tr th,
+  table tr td {
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 14px;
+  }
+  table {
+    border-spacing: 0;
+    table-layout: initial;
+    border-collapse: collapse;
+  }
+  .reportTable td {
+    padding: 8pt 5.4pt 8pt 5.4pt;
+    font-family: '仿宋', FangSong;
+  }
+  .reportTable .table-harder {
+    text-align: center;
+    font-weight: bolder;
+  }
+  .reportTable .table-content {
+    color: #606266;
+  }
+}
+
+.chart-db-col-left {
+  flex: 1;
+  margin-right: 30px;
+  border: 1px solid #EBEDF0;
+  .el-button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+}
+.chart-db-col-right {
+  width: 30%;
+  border: 1px solid #EBEDF0;
+  border-radius: 4px;
+  .chart-selection {
+    display: flex;
+    .navMenu {
+      flex: 0 0 100px;
+      display: flex;
+      flex-direction: column;
+    }
+    .chart-content {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1;
+      .menu-item {
+        width: 88px;
+        height: 88px;
+        background-color: #666;
+        color: #fff;
+      }
+    }
+  }
+  .formClass {
+    text-align: left;
+  }
+  .el-collapse-item__header {
+    padding-left: 20px;
+    background: #F7F8FA;
+    border: 1px solid #EBEDF0;
+    border-radius: 4px 4px 0 0;
+    font-size: 16px;
+    color: #4A4A4D;
+    font-weight: bolder;
+    .el-collapse-item__arrow {
+      color: #AFB0B3
+    }
+  }
+  .el-tabs__nav {
+    width: 100%;
+    display: flex;
+    .el-tabs__item {
+      flex: 1;
+    }
+  }
+}

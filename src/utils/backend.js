@@ -166,7 +166,6 @@ export default {
      * 获取url
      */
     getUrl(apiKey, data) {
-        debugger
         let api = getApiConf(apiKey);
         let url = getUrl(api);
         if (typeof data === 'object') {
