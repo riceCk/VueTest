@@ -3,14 +3,14 @@ import china from "echarts/map/json/china";
 
 export class handlerChartsData {
   static colorType = {
-    // 单色
-    monochrome: ['#436299', '#5874A5', '#6C85B0', '#8196BB', '#96A7C6', '#ABB9D1', '#BFCADC', '#D4DBE8', '#E9ECF3', '#2F528F'],
     // 彩色
-    multicolor: ['#82DEF1', '#E2A172', '#A7D28A', '#F5D86A', '#6B92D7', '#57B6ED', '#4CCA9B', '#5B949A', '#6AC6FB', '#E5A5D6'],
+    multicolor: ['#2586DE', '#ED7D31', '#A5A5A5', '#FFC000', '#4472C4', '#70AD47', '#B835E3', '#5A9AD5'],
+    // 单色
+    monochrome: ['#FFAEB9', '#B11518', '#FFD9D7', '#F08277', '#DD6352', '#FE9E0B', '#FF5E56', '#F6C2AD'],
     // 冷色
-    cool: ['#24448E', '#2D5E9E', '#3577AE', '#3D91BE', '#46AАСЕ', '#44AАСЕ', '#89CCCE', '#B3DDCC', '#DCECC9', '#1C2B7F'],
+    cool: ['#EAB103', '#FDEA04', '#CD7500', '#F5D788', '#AE4500', '#F6D56B', '#E6A75C', '#F8E4C6'],
     // 暖色
-    warm: ['#C74E29', '#E77033', '#EB893E', '#D97F3A', '#F0A04B', '#F5B857', '#F9D063', '#FDE86E', '#F5EDB9', '#9D4429'],
+    warm: ['#4864F5', '#8899F5', '#B9C6FA', '#2ABDC9', '#007BFF', '#4FA2F3', '#2828F0', '#1DB3F4'],
   }
 
   /**
@@ -103,23 +103,48 @@ export class handlerChartsData {
   }
 
   /**
-   * 舆情属性占比 饼状图
+   * 饼状图
    * @param {*} tableConfig
    * @param {*} chartData
    * @param {*} formData
    */
   static setAttribute (tableConfig, chartData, formData) {
-    const {tableColumn, tablePropData} = tableConfig
     const {multiple, formatterNumber, formatterPercentage, themeColor = 'multicolor'} = formData
+    const {seriesData, legendData} = this.handlePieConfig(tableConfig, multiple)
+    chartData.seriesData = seriesData
+    chartData.legendData = legendData
     // 是否隐藏数值
     if (formatterPercentage || formatterNumber) {
       if (formatterPercentage) chartData.formatter = "{b} {d}%"
       if (formatterNumber) chartData.formatter = "{b} {d}%"
       if (formatterNumber && formatterPercentage) chartData.formatter = "{b} {c}条 \n {d}%"
     }
-    console.log(tableColumn, tablePropData, 11111111111)
     chartData.seriesColor = this.colorType[themeColor]
     return chartData
+  }
+
+  /**
+   * 处理饼图数据
+   * @param tableConfig
+   * @param multiple
+   * @returns seriesData: [xxx, xxx]
+   * @returns legendData: [{value: xxx, name: xxx}]
+   */
+  static handlePieConfig (tableConfig, multiple = 1) {
+    const {tableColumn, tablePropData} = tableConfig
+    let legendData = []
+    let seriesData = []
+    let propData = tablePropData[0]
+    tableColumn.forEach(item => {
+      if (item.label) {
+        legendData.push(item.label)
+        seriesData.push({
+          value: propData[item.prop] * multiple || 0,
+          name: item.label
+        })
+      }
+    })
+    return {seriesData, legendData}
   }
 
   /**
@@ -173,27 +198,41 @@ export class handlerChartsData {
   }
 
   /**
-   * 条形图 舆情属性占比
+   * 条形图
    * @param {*} tableConfig
    * @param {*} chartData
    * @param {*} formData
    */
   static setBarGraph (tableConfig, chartData, formData) {
-    let {updateTable} = tableConfig
     const {multiple, hideGrid, showData, themeColor = 'multicolor'} = formData
-    // let yAxisData = []
-    // let seriesData = []
-    // updateTable = updateTable.sort((item1, item2) => item2.value - item1.value)
-    // updateTable.forEach(item => {
-    //   yAxisData.push(item.name)
-    //   seriesData.push(item.value * multiple)
-    // })
-    // chartData.yAxisData = yAxisData
-    // chartData.seriesData = seriesData
-    chartData.hideGrid = hideGrid
-    chartData.showData = showData
-    chartData.axisColor = this.colorType[themeColor]
+    const {yAxisData, seriesData} = this.handleBarConfig(tableConfig, multiple);
+    chartData.yAxisData = yAxisData;
+    chartData.seriesData = seriesData;
+    chartData.hideGrid = hideGrid;
+    chartData.showData = showData;
+    chartData.axisColor = this.colorType[themeColor];
     return chartData
+  }
+
+  /**
+   * 处理单维条形图数据
+   * @param tableConfig
+   * @param multiple
+   * @return yAxisData: [xxxxxx, xxxx]
+   * @return seriesData: [22, 111]
+   */
+  static handleBarConfig (tableConfig, multiple = 1) {
+    const {tableColumn, tablePropData} = tableConfig
+    const propData = tablePropData[0];
+    let yAxisData = []
+    let seriesData = []
+    tableColumn.forEach(item => {
+      if (item.label && item.prop !== 'YData') {
+        yAxisData.push(item.label);
+        seriesData.push(propData[item.prop] * multiple || 0)
+      }
+    })
+    return {yAxisData, seriesData}
   }
 
   /**
@@ -203,17 +242,25 @@ export class handlerChartsData {
    * @param {*} formData
    */
   static setKeyWord (tableConfig, chartData, formData) {
-    const {updateTable} = tableConfig
-    const {multiple, styleRadio, themeColor = 'multicolor'} = formData
-    // chartData.seriesData = updateTable.map(item => {
-    //   return {
-    //     key: item.key,
-    //     name: item.key || item.name,
-    //     value: item.value * multiple
-    //   }
-    // })
+    const {multiple, themeColor = 'multicolor'} = formData
+    chartData.seriesData = this.handleKeyWord(tableConfig, multiple)
     chartData.colorList = this.colorType[themeColor];
     return chartData
+  }
+  static handleKeyWord (tableConfig, multiple = 1) {
+    const {tableColumn, tablePropData} = tableConfig
+    const propData = tablePropData[0]
+    let seriesData = []
+    tableColumn.forEach(item => {
+      if (item.label && item.prop !== 'YData') {
+        seriesData.push({
+          key: item.label,
+          name: item.label,
+          value: propData[item.prop] * multiple || 0
+        })
+      }
+    })
+    return seriesData
   }
 
   /**
@@ -223,11 +270,14 @@ export class handlerChartsData {
    * @param formData
    */
   static setMap (tableConfig, charData, formData) {
-    const {themeColor = 'multicolor'} = formData
     echarts.registerMap('demo', china);
+    const {multiple, themeColor = 'multicolor'} = formData
+    const seriesData = this.handleKeyWord(tableConfig, multiple)
+    charData.seriesData = seriesData
     charData.inRangeColor = ['#e0ffff', this.colorType[themeColor][0]]
     return charData
   }
+
 
   /**
    * 舆情传播路径  路径图

@@ -6,6 +6,7 @@
 .chart-wrapper {
   display: flex;
   padding: 30px;
+  height: 690px;
   border: 1px solid #EBEDF0;
   box-shadow: 0 0 20px 0 rgba(195, 198, 204, 0.5);
   table,
@@ -34,6 +35,7 @@
 }
 
 .chart-db-col-left {
+  padding-top: 90px;
   flex: 1;
   margin-right: 30px;
   border: 1px solid #EBEDF0;
@@ -44,29 +46,48 @@
   }
 }
 .chart-db-col-right {
-  width: 30%;
+  width: 490px;
   border: 1px solid #EBEDF0;
   border-radius: 4px;
   .chart-selection {
     display: flex;
     .navMenu {
-      flex: 0 0 100px;
+      flex: 0 0 82px;
       display: flex;
       flex-direction: column;
+      border-right: 1px solid #EBEDF0;
+      li {
+        padding: 13px 0;
+        font-size: 14px;
+        color: #4A4A4D;
+        cursor: pointer;
+        &.active {
+          color: #409EFF;
+        }
+      }
     }
     .chart-content {
+      height: 500px;
+      overflow: auto;
       display: flex;
       flex-wrap: wrap;
       flex: 1;
       .menu-item {
-        width: 88px;
-        height: 88px;
-        background-color: #666;
-        color: #fff;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        color: #4A4A4D;
+        cursor: pointer;
+        img {
+          width: 100px;
+          height: 80px;
+          margin-bottom: 14px;
+        }
       }
     }
   }
   .formClass {
+    width: 80%;
     text-align: left;
   }
   .el-collapse-item__header {
@@ -74,7 +95,7 @@
     background: #F7F8FA;
     border: 1px solid #EBEDF0;
     border-radius: 4px 4px 0 0;
-    font-size: 16px;
+    font-size: 15px;
     color: #4A4A4D;
     font-weight: bolder;
     .el-collapse-item__arrow {
@@ -86,6 +107,36 @@
     display: flex;
     .el-tabs__item {
       flex: 1;
+    }
+  }
+  .el-collapse-item__wrap {
+    padding: 10px;
+    border: 0;
+    .el-tabs__header {
+      margin: 0;
+      .el-tabs__item.is-active {
+        background-color: #F7F8FA;
+      }
+    }
+  }
+  .el-tabs__content {
+    height: 500px;
+    border: 1px solid #EBEDF0;
+  }
+  .themeColor {
+    padding: 30px 20px;
+    text-align: left;
+    p {
+      margin-bottom: 20px;
+    }
+    li {
+      display: flex;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    .boxColor {
+      width: 20px;
+      height: 14px;
     }
   }
 }

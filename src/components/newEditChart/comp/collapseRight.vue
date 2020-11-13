@@ -13,7 +13,7 @@
                   v-for="(item, index) in navMenuList"
                   :key="index"
                   @click="handleTypeCharts(item)"
-                  :class="{active: index === activeNav}">
+                  :class="{active: item.value === activeNav}">
                   {{item.label}}
                 </li>
               </ul>
@@ -22,6 +22,7 @@
                     @click="handleChart(item)"
                     v-for="(item, index) in activeChildren"
                     :key="index">
+                  <img :src="item.imgUrl" alt="">
                   {{item.label}}
                 </li>
               </ul>
@@ -43,7 +44,16 @@
             </el-form>
           </el-tab-pane>
           <el-tab-pane label="主题颜色" name="third">
-            <ul><li v-for="item in ['monochrome', 'multicolor', 'cool','warm']" @click="handleChartColor(item)">{{item}}</li></ul>
+            <ul class="themeColor">
+              <p>默认主题颜色</p>
+              <li @click="handleChartColor('multicolor')">
+                <span v-for="item in colorType.monochrome" class="boxColor" :style="{backgroundColor: item}"></span>
+              </li>
+              <p>系统主题颜色</p>
+              <li v-if="key !== 'multicolor'" v-for="(item, key) in colorType" @click="handleChartColor(key)">
+                <span class="boxColor" :style="{backgroundColor: it}" v-for="it in item"></span>
+              </li>
+            </ul>
           </el-tab-pane>
         </el-tabs>
       </el-collapse-item>
@@ -74,11 +84,12 @@
     },
     data () {
       return {
-        activeName: '1',
+        activeName: '2',
         activeAttributes: 'first',
         activeNav: 'all',
         chartType: null,
         navMenuList: navMenuList,
+        colorType: handlerChartsData.colorType,
         /**折线图数据**/
         lineConfig: {
           color: ["#3699D2", "#EB5974"],
@@ -105,8 +116,8 @@
         barGraphConfig: {
           barWidth: 10,
           axisColor: [],
-          yAxisData: ["网易号", "百度搜索", "一点资讯", "搜狐新闻App", "腾讯新闻", "新闻_检索", "百家号", "今日头条", "新浪微博", "微信"],
-          seriesData: [311, 364, 407, 412, 702, 737, 765, 1813, 6050, 6858]
+          yAxisData: [],
+          seriesData: []
         },
         /**关键词云**/
         keywordConfig: {
@@ -127,19 +138,13 @@
           legendRight: "0",
           legendBottom: "50",
           legendShow: true,
-          legendData: ["直接访问", "邮件营销"],
+          legendData: [],
           center: ["45%", "50%"],
           seriesColor: ["#EFB358", "#F49D1A"],
           seriesRadius: ["45%", "65%"],
           formatter: '',
           labelFontSizeColor: '#333333',
-          seriesData: [
-            {value: 335, name: '直接访问'},
-            {value: 310, name: '邮件营销'},
-            {value: 274, name: '联盟广告'},
-            {value: 235, name: '视频广告'},
-            {value: 400, name: '搜索引擎'}
-          ],
+          seriesData: [],
         },
         optionConfig: null,
         // 配置调条件框配置
@@ -155,8 +160,14 @@
          * 平滑数值:smoothedData
          * 显示数值:showData
          */
-        formData: {}, // 修改属性表单
-        tableConfig: {}, // 表格数据
+        formData: {
+          multiple: 1
+        }, // 修改属性表单
+        tableConfig: {
+          tableColumn: [],
+          tablePropData: [],
+          type: {}
+        }, // 表格数据
       }
     },
     computed: {
@@ -181,7 +192,11 @@
     watch: {
       optionConfig: {
         handler (val) {
-          this.$emit('handleOption', val)
+          this.$emit('handleOption', {
+            option: val,
+            type: this.chartType,
+            formData: this.formData
+          })
         },
         deep: true // 对象内部的属性监听，也叫深度监听
       },
@@ -199,7 +214,7 @@
           const {tableColumn, tablePropData, type} = val
           this.tableConfig.tableColumn = tableColumn
           this.tableConfig.tablePropData = tablePropData && tablePropData.data
-          this.handleChart(type)
+          this.handleChart(this.chartType || type)
         },
         deep: true // 对象内部的属性监听，也叫深度监听
       }
@@ -220,7 +235,7 @@
         this.formOptions = this.navMenuList.filter(it => it.value === item.father)[0].formOptions || {}
         switch (item.value.split('-')[0]) {
           case 'excel':
-            console.log('表格');
+            this.optionConfig = null
             break;
           case 'line':
             this.handleLineConfig(item)
@@ -291,24 +306,21 @@
       // 处理条形图
       handleBarGraphConfig (type) {
         let barGraphConfig = JSON.parse(JSON.stringify(this.barGraphConfig));
-        barGraphConfig = handlerChartsData.setBarGraph({}, barGraphConfig, this.formData);
+        barGraphConfig = handlerChartsData.setBarGraph(this.tableConfig, barGraphConfig, this.formData);
         this.optionConfig = handlerChartsOptionConfig.drawBarGraphChart(barGraphConfig)
       },
       // 处理关键词云
       handleKeywordChart (type) {
         let keywordConfig = JSON.parse(JSON.stringify(this.keywordConfig));
-        keywordConfig = handlerChartsData.setBarGraph({}, keywordConfig, this.formData);
-        this.optionConfig = handlerChartsOptionConfig.drawKeywordChart(this.keywordConfig)
+        keywordConfig = handlerChartsData.setKeyWord(this.tableConfig, keywordConfig, this.formData);
+        this.optionConfig = handlerChartsOptionConfig.drawKeywordChart(keywordConfig)
       },
       // 处理地图
       handleMapConfig (item) {
         let mapConfig = {
-          seriesData: [
-            { name: "徐州市", value: 10 },
-            { name: "南京市", value: 20 },
-            { name: "常州市", value: 30 },]
+          seriesData: []
         }
-        mapConfig = handlerChartsData.setMap({}, mapConfig, this.formData)
+        mapConfig = handlerChartsData.setMap(this.tableConfig, mapConfig, this.formData)
         this.optionConfig = handlerChartsOptionConfig.drawMapChart(mapConfig)
       },
       // 处理主题颜色
@@ -320,8 +332,6 @@
 </script>
 
 <style type="text/less" lang="less">
-
-
 
 
 </style>

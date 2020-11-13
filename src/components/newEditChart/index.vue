@@ -16,6 +16,7 @@
   import echarts from "echarts";
   import collapseRight from './comp/collapseRight'
   import collapseLeft from './comp/collapseLeft'
+  import {tools} from './utils/tools'
 
   export default {
     name: 'newEditChart',
@@ -38,21 +39,17 @@
             },
             data: [
               {
+                YData: '12312asdf',
                 data2: 54,
                 data1: 23,
                 data3: 12,
               },
-              {
-                data2: 12,
-                data1: 45,
-                data3: 55,
-              },
             ],
           },
           type: {
-            label: '传统饼图',
-            value: 'pie-1',
-            father: 'pie',
+            label: '折线图',
+            value: 'line-1',
+            father: 'line',
           },
         },
       }
@@ -65,18 +62,21 @@
       setTimeout(() => {
         this.tableColumnAndProp.tableColumn = [
           {
-            label: "微信",
+            label: "上海",
             prop: "data1",
           },
           {
-            label: "百度搜索",
+            label: "江苏",
             prop: "data2",
           },
           {
-            label: "百度贴吧",
+            label: "北京",
             prop: "data3",
           },
-
+          {
+            label: "sadf",
+            prop: "YData",
+          },
         ]
       })
     },
@@ -96,35 +96,10 @@
         })
         let tableArrayData = []
         tableData.forEach(item => {
-          tableArrayData.push(this.filterData(item))
+          tableArrayData.push(tools.unFlatten(item))
         })
         this.tableColumnAndProp.tablePropData.data = tableArrayData
       },
-      filterData(data) {
-        let newData = {};
-        for(let key in data) {
-          if(key.indexOf('.') != -1) {
-            let arr = key.split('.');
-            let obj = {};
-            for(let i=0; i<arr.length-1; i++) {
-              obj[arr[i]] = {};
-            }
-            obj[arr[arr.length - 1]] = data[key].content;
-            let newObj = {};
-            for(let i = arr.length - 1; i > 0; i--) {
-              obj[arr[i-1]][arr[i]] = obj[arr[i]];
-            }
-            if (newData[arr[0]]) {
-              Object.assign(newData[arr[0]], obj[arr[0]])
-            } else {
-              newData[arr[0]] = obj[arr[0]];
-            }
-          } else {
-            newData[key] = data[key].content;
-          }
-        }
-        return newData;
-      }
     }
   }
 </script>

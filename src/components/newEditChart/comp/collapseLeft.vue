@@ -1,7 +1,8 @@
 <template>
   <div class="chart-db-col-left">
-    <div :id="eChartId" style="width:100%;height:454px;"></div>
+    <div v-show="activeChart.father !== 'excel'" :id="eChartId" style="width:100%;height:500px;"></div>
     <report-table
+      v-show="activeChart.father === 'excel'"
       style="width:80%"
       :dragId="`${eChartId}-table`"
       :columns="tableColumn"
@@ -13,6 +14,7 @@
 <script>
   import echarts from "echarts";
   import reportTable from './reportTable'
+
   export default {
     name: 'collapseLeft',
     components: {
@@ -23,12 +25,21 @@
         type: String,
         default: 'eChartId'
       },
-      optionConfig: {},
+      optionConfig: {
+        type: Object,
+        default () {
+          return {
+            option: null,
+            type: '',
+            formData: ''
+          }
+        }
+      },
       tableColumnAndProp: {
         type: Object,
       },
     },
-    data() {
+    data () {
       return {
         tableColumn: [],
         tablePropData: {
@@ -38,13 +49,16 @@
           },
           data: [],
         },
+        activeChart: {}
       }
     },
     computed: {},
     watch: {
       optionConfig: {
         handler (val) {
-          this.initChart()
+          const {option, type, formData} = val;
+          this.activeChart = type
+          this.initChart(option)
         },
         deep: true // 对象内部的属性监听，也叫深度监听
       },
@@ -57,20 +71,20 @@
         deep: true
       }
     },
-    created() {
+    created () {
 
     },
-    mounted() {
+    mounted () {
 
     },
     methods: {
       // 初始化渲染
-      initChart () {
+      initChart (option) {
         if (!this.myChart) {
           this.myChart = echarts.init(document.getElementById(this.eChartId));
         }
-        if (this.optionConfig) {
-          this.renderingDta(this.optionConfig)
+        if (option) {
+          this.renderingDta(option)
         }
         window.onresize = () => {
           this.myChart.resize()

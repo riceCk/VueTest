@@ -24,6 +24,7 @@ export default [
     children: [
       {
         label: '表格',
+        imgUrl: require('../image/excel-1.png'),
         value: 'excel-1',
         father: 'excel'
       }
@@ -68,6 +69,7 @@ export default [
     children: [
       {
         label: '折线图',
+        imgUrl: require('../image/line-1.png'),
         value: 'line-1',
         father: 'line',
       }
@@ -112,6 +114,7 @@ export default [
     children: [
       {
         label: '面积图',
+        imgUrl: require('../image/lineArea-1.png'),
         value: 'lineArea-1',
         father: 'lineArea',
       },
@@ -146,16 +149,19 @@ export default [
     children: [
       {
         label: '传统饼图',
+        imgUrl: require('../image/pie-1.png'),
         value: 'pie-1',
         father: 'pie',
       },
       {
         label: '环形图',
+        imgUrl: require('../image/pie-2.png'),
         value: 'pie-2',
         father: 'pie',
       },
       {
         label: '玫瑰图',
+        imgUrl: require('../image/pie-3.png'),
         value: 'pie-3',
         father: 'pie',
       }
@@ -195,6 +201,7 @@ export default [
     children: [
       {
         label: '柱状图',
+        imgUrl: require('../image/histogram-1.png'),
         value: 'histogram-1',
         father: 'histogram',
       },
@@ -234,6 +241,7 @@ export default [
     children: [
       {
         label: '条形图',
+        imgUrl: require('../image/barGraph-1.png'),
         value: 'barGraph-1',
         father: 'barGraph',
       },
@@ -252,6 +260,7 @@ export default [
     children: [
       {
         label: '词云图',
+        imgUrl: require('../image/keyword-1.png'),
         value: 'keyword-1',
         father: 'keyword',
       },
@@ -281,6 +290,7 @@ export default [
     children: [
       {
         label: '地图',
+        imgUrl: require('../image/map-1.png'),
         value: 'map-1',
         father: 'map',
       },

@@ -29,6 +29,7 @@ export class handlerChartsOptionConfig {
       seriesMarkPoint = {},
       selected,
       hideGrid = false,
+      chartTitle,
     }) {
     seriesData.forEach(item => {
       item.smooth = seriesSmooth
@@ -38,6 +39,10 @@ export class handlerChartsOptionConfig {
       color,
       tooltip: {
         trigger: "axis"
+      },
+      title: {
+        left: 'center',
+        text: chartTitle,
       },
       grid: {
         left: '5%',
@@ -106,7 +111,6 @@ export class handlerChartsOptionConfig {
       titleTop = 20,
       titleColor = "red",
       titleFontSize = "16",
-      titleLeft = "right",
       legendRight = "0",
       legendBottom = "50",
       legendShow = true,
@@ -117,6 +121,7 @@ export class handlerChartsOptionConfig {
       formatter = '{b} {c}条 \n {d}%',
       labelFontSizeColor = '#333333',
       roseType = '',
+      chartTitle,
       seriesData = [
         {value: 335, name: "直接访问"},
         {value: 310, name: "邮件营销"}
@@ -136,12 +141,13 @@ export class handlerChartsOptionConfig {
       },
       title: {
         top: titleTop || 30,
+        text: chartTitle,
         textStyle: {
           color: titleColor || "red",
           fontWeight: "bold",
           fontSize: titleFontSize || 16
         },
-        left: titleLeft || "right"
+        left: 'center',
       },
       legend: {
         show: legendShow,
@@ -201,7 +207,8 @@ export class handlerChartsOptionConfig {
       legendData = [],
       xAxisData = [],
       seriesColor = ['#F49D1A', '#F49D1A', '#F49D1A'],
-      seriesData = []
+      seriesData = [],
+      chartTitle
     }
   ) {
     function handlerFormatter (val) {
@@ -245,6 +252,10 @@ export class handlerChartsOptionConfig {
       })
     })
     return {
+      title: {
+        left: 'center',
+        text: chartTitle,
+      },
       toolbox: {
         feature: {
           saveAsImage: {
@@ -316,6 +327,7 @@ export class handlerChartsOptionConfig {
       axisColor,
       hideGrid = false,
       showData = false,
+      chartTitle,
       yAxisData = ["网易号", "百度搜索", "一点资讯", "搜狐新闻App", "腾讯新闻", "新闻_检索", "百家号", "今日头条", "新浪微博", "微信"],
       seriesData = [311, 364, 407, 412, 702, 737, 765, 1813, 6050, 6858]
     }
@@ -326,6 +338,10 @@ export class handlerChartsOptionConfig {
       backGroundData.push(maxNum * 1.1)
     }
     const option = {
+      title: {
+        left: 'center',
+        text: chartTitle,
+      },
       toolbox: {
         feature: {
           saveAsImage: {
@@ -444,10 +460,15 @@ export class handlerChartsOptionConfig {
       colorList,
       seriesData,
       sizeRange,
-      maskImage
+      maskImage,
+      chartTitle
     }
   ) {
     const option = {
+      title: {
+        left: 'center',
+        text: chartTitle,
+      },
       tooltip: {
         show: true
       },
@@ -495,14 +516,20 @@ export class handlerChartsOptionConfig {
    */
   static drawMapChart (
     {
+      chartTitle,
       seriesData = [],
       inRangeColor = ["#e0ffff", "#006edd"]
     }
   ) {
+    const Max = Math.max.apply(Math, seriesData.map(function (o){return o.value}))
     return {
+      title: {
+        left: 'center',
+        text: chartTitle,
+      },
       dataRange: {
         min: 0, //颜色区间的最小值
-        max: 30, //颜色区间的最大值，和data中的最大值一致
+        max: Max + 10, //颜色区间的最大值，和data中的最大值一致
         x: "left",
         y: "bottom",
         text: ["高", "低"], // 文本，默认为数值文本
@@ -517,6 +544,7 @@ export class handlerChartsOptionConfig {
       },
       series: [
         {
+          name: '',
           type: "map",
           map: "demo",
           itemStyle: {
