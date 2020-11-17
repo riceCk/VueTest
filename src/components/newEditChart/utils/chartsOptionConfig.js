@@ -109,7 +109,6 @@ export class handlerChartsOptionConfig {
   static drawPieChart (
     {
       titleTop = 20,
-      titleColor = "red",
       titleFontSize = "16",
       legendRight = "0",
       legendBottom = "50",
@@ -142,11 +141,10 @@ export class handlerChartsOptionConfig {
       title: {
         top: titleTop || 30,
         text: chartTitle,
-        textStyle: {
-          color: titleColor || "red",
-          fontWeight: "bold",
-          fontSize: titleFontSize || 16
-        },
+        // textStyle: {
+        //   fontWeight: "bold",
+        //   fontSize: titleFontSize || 16
+        // },
         left: 'center',
       },
       legend: {

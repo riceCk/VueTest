@@ -2,8 +2,8 @@
   <div class="chart-db-col-left">
     <div v-show="activeChart.father !== 'excel'" :id="eChartId" style="width:100%;height:500px;"></div>
     <report-table
-      v-show="activeChart.father === 'excel'"
-      style="width:80%"
+      v-show="activeChart.father === 'excel' || formData.showTable"
+      style="width:80%;margin: 0 auto;"
       :dragId="`${eChartId}-table`"
       :columns="tableColumn"
       :props="tablePropData"
@@ -49,7 +49,9 @@
           },
           data: [],
         },
-        activeChart: {}
+        formData: {},
+        activeChart: {},
+        myChart: ''
       }
     },
     computed: {},
@@ -57,6 +59,7 @@
       optionConfig: {
         handler (val) {
           const {option, type, formData} = val;
+          this.formData = formData
           this.activeChart = type
           this.initChart(option)
         },
@@ -68,7 +71,8 @@
           this.tableColumn = tableColumn
           this.tablePropData = tablePropData
         },
-        deep: true
+        deep: true,
+        immediate: true
       }
     },
     created () {

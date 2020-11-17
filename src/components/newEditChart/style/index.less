@@ -3,12 +3,13 @@
   margin: 0;
   list-style: none;
 }
+.chart-edit .el-dialog {
+  border: 1px solid #EBEDF0;
+  box-shadow: 0 0 20px 0 rgba(195, 198, 204, 0.5);
+}
 .chart-wrapper {
   display: flex;
   padding: 30px;
-  height: 690px;
-  border: 1px solid #EBEDF0;
-  box-shadow: 0 0 20px 0 rgba(195, 198, 204, 0.5);
   table,
   table tr th,
   table tr td {
@@ -35,7 +36,7 @@
 }
 
 .chart-db-col-left {
-  padding-top: 90px;
+  padding: 30px 0;
   flex: 1;
   margin-right: 30px;
   border: 1px solid #EBEDF0;
@@ -130,9 +131,14 @@
       margin-bottom: 20px;
     }
     li {
+      padding: 8px;
+      width: 165px;
       display: flex;
       margin-bottom: 20px;
       cursor: pointer;
+      &.activeColor {
+        background-color: #F2F3F5;
+      }
     }
     .boxColor {
       width: 20px;

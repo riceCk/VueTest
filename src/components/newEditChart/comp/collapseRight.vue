@@ -1,7 +1,7 @@
 <template>
   <div class="chart-db-col-right">
     <el-collapse v-model="activeName" accordion>
-      <el-collapse-item title="数据编辑" name="1">
+      <el-collapse-item title="数据编辑" name="1" id="dataEditing">
         <excel-table :tableColumnAndProp="tableColumnAndProp" v-on="$listeners"></excel-table>
       </el-collapse-item>
       <el-collapse-item title="修改属性" name="2">
@@ -46,11 +46,16 @@
           <el-tab-pane label="主题颜色" name="third">
             <ul class="themeColor">
               <p>默认主题颜色</p>
-              <li @click="handleChartColor('multicolor')">
-                <span v-for="item in colorType.monochrome" class="boxColor" :style="{backgroundColor: item}"></span>
+              <li @click="handleChartColor('multicolor')"
+                  :class="{'activeColor': formData.themeColor === 'multicolor'}"
+              >
+                <span v-for="item in colorType.multicolor" class="boxColor" :style="{backgroundColor: item}"></span>
               </li>
               <p>系统主题颜色</p>
-              <li v-if="key !== 'multicolor'" v-for="(item, key) in colorType" @click="handleChartColor(key)">
+              <li v-if="key !== 'multicolor'"
+                  :class="{'activeColor': formData.themeColor === key}"
+                  v-for="(item, key) in colorType" @click="handleChartColor(key)"
+              >
                 <span class="boxColor" :style="{backgroundColor: it}" v-for="it in item"></span>
               </li>
             </ul>
@@ -84,7 +89,7 @@
     },
     data () {
       return {
-        activeName: '2',
+        activeName: '1',
         activeAttributes: 'first',
         activeNav: 'all',
         chartType: null,
@@ -161,7 +166,8 @@
          * 显示数值:showData
          */
         formData: {
-          multiple: 1
+          multiple: 1,
+          themeColor: 'multicolor',
         }, // 修改属性表单
         tableConfig: {
           tableColumn: [],
@@ -211,12 +217,14 @@
       // 监听父级传过来的数据
       tableColumnAndProp: {
         handler (val) {
-          const {tableColumn, tablePropData, type} = val
+          const {tableColumn, tablePropData, type, formData} = val
           this.tableConfig.tableColumn = tableColumn
           this.tableConfig.tablePropData = tablePropData && tablePropData.data
+          this.formData = Object.assign(this.formData, formData)
           this.handleChart(this.chartType || type)
         },
-        deep: true // 对象内部的属性监听，也叫深度监听
+        deep: true, // 对象内部的属性监听，也叫深度监听
+        immediate: true
       }
     },
     created () {

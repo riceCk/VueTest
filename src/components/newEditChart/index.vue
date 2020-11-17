@@ -1,15 +1,29 @@
 <template>
-  <div class="chart-wrapper">
-    <collapseLeft
-      :optionConfig="optionConfig"
-      :tableColumnAndProp="tableColumnAndProp">
-    </collapseLeft>
-    <collapseRight
-      :tableColumnAndProp="tableColumnAndProp"
-      @handleColumnAndData="handleColumnAndData"
-      @handleOption="handleOption">
-    </collapseRight>
-  </div>
+  <el-drawer
+    class="chart-edit"
+    :with-header="false"
+    :visible="dialogVisible"
+    size="85%"
+    @close="onClose"
+  >
+    <section class="chart-wrapper">
+      <collapseLeft
+        ref="collapseLeft"
+        :optionConfig="optionConfig"
+        :tableColumnAndProp="tableColumnAndProp">
+      </collapseLeft>
+      <collapseRight
+        :tableColumnAndProp="tableColumnAndProp"
+        @handleColumnAndData="handleColumnAndData"
+        @handleOption="handleOption">
+      </collapseRight>
+    </section>
+    <section>
+      <el-button type="success" @click="onSave">保存</el-button>
+      <el-button type="primary" @click="onClose">取消</el-button>
+    </section>
+  </el-drawer>
+
 </template>
 
 <script>
@@ -24,34 +38,28 @@
       collapseRight,
       collapseLeft
     },
-    props: {},
+    props: {
+      dialogVisible: {
+        type: Boolean
+      },
+      tableColumnAndProp: {
+        type: Object,
+        default () {
+          return {
+            tableColumn: [],
+            tablePropData: {},
+            type: {},
+            formData: {},
+          }
+        }
+      }
+    },
     data () {
       return {
         eChartId: 'eChartId',
         myChart: '',
+        /**option, type, formData**/
         optionConfig: null,
-        tableColumnAndProp: {
-          tableColumn: [],
-          tablePropData: {
-            "header-cell-style": {
-              background: "red",
-              color: "#fff",
-            },
-            data: [
-              {
-                YData: '12312asdf',
-                data2: 54,
-                data1: 23,
-                data3: 12,
-              },
-            ],
-          },
-          type: {
-            label: '折线图',
-            value: 'line-1',
-            father: 'line',
-          },
-        },
       }
     },
     computed: {},
@@ -59,31 +67,15 @@
     created () {
     },
     mounted () {
-      setTimeout(() => {
-        this.tableColumnAndProp.tableColumn = [
-          {
-            label: "上海",
-            prop: "data1",
-          },
-          {
-            label: "江苏",
-            prop: "data2",
-          },
-          {
-            label: "北京",
-            prop: "data3",
-          },
-          {
-            label: "sadf",
-            prop: "YData",
-          },
-        ]
-      })
     },
     methods: {
       // 数据回显
-      handleOption (option) {
-        this.optionConfig = option
+      /**
+       * {option, type, formData}
+       * @param optionConfig
+       */
+      handleOption (optionConfig) {
+        this.optionConfig = optionConfig
       },
       // 孙级组件传表格参数
       handleColumnAndData (data) {
@@ -100,6 +92,17 @@
         })
         this.tableColumnAndProp.tablePropData.data = tableArrayData
       },
+      onSave () {
+        this.$emit('handleEditChart', {
+          tableColumnAndProp: this.tableColumnAndProp,
+          optionConfig: this.optionConfig,
+          image: this.$refs.collapseLeft.myChart.getDataURL({})
+        })
+        this.onClose()
+      },
+      onClose () {
+        this.$emit('update:dialogVisible', false)
+      }
     }
   }
 </script>

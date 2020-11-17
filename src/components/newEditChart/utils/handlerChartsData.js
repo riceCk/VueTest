@@ -20,7 +20,7 @@ export class handlerChartsData {
    * @param {*} formData
    */
   static setLineParam (tableConfig, chartData, formData) {
-    const {smooth, multiple = 1, hideGrid, markPointTop, markPointBottom, seriesAreaStyle, themeColor = 'multicolor'} = formData
+    const {smooth, multiple = 1, chartTitle, hideGrid, markPointTop, markPointBottom, seriesAreaStyle, themeColor = 'multicolor'} = formData
     const {legendData, seriesData, xAxisData,} = this.handelLineOrHistogramConfig(tableConfig, multiple)
     chartData.legendData = legendData
     chartData.seriesData = seriesData
@@ -28,6 +28,7 @@ export class handlerChartsData {
     chartData.color = this.colorType[themeColor]
     chartData.hideGrid = hideGrid
     chartData.seriesSmooth = smooth
+    chartData.chartTitle = chartTitle
     if (markPointTop || markPointBottom) {
       let data = []
       if (markPointTop) data.push({name: "最大值", type: "max"})
@@ -109,10 +110,11 @@ export class handlerChartsData {
    * @param {*} formData
    */
   static setAttribute (tableConfig, chartData, formData) {
-    const {multiple, formatterNumber, formatterPercentage, themeColor = 'multicolor'} = formData
+    const {multiple, chartTitle, formatterNumber, formatterPercentage, themeColor = 'multicolor'} = formData
     const {seriesData, legendData} = this.handlePieConfig(tableConfig, multiple)
     chartData.seriesData = seriesData
     chartData.legendData = legendData
+    chartData.chartTitle = chartTitle
     // 是否隐藏数值
     if (formatterPercentage || formatterNumber) {
       if (formatterPercentage) chartData.formatter = "{b} {d}%"
@@ -154,7 +156,7 @@ export class handlerChartsData {
    * @param {*} formData
    */
   static setHistogram (tableConfig, chartData, formData) {
-    const {multiple = 1, formatterNumber, hideGrid, themeColor = 'multicolor'} = formData
+    const {multiple = 1, chartTitle, formatterNumber, hideGrid, themeColor = 'multicolor'} = formData
     const {xAxisData, seriesData, legendData} = this.handleHistogramConfig(tableConfig, multiple)
     chartData.xAxisData = xAxisData
     chartData.seriesData = seriesData
@@ -162,6 +164,7 @@ export class handlerChartsData {
     chartData.labelShow = formatterNumber
     chartData.seriesColor = this.colorType[themeColor]
     chartData.hideGrid = hideGrid
+    chartData.chartTitle = chartTitle
     return chartData
   }
   static handleHistogramConfig (tableConfig, multiple) {
@@ -204,13 +207,14 @@ export class handlerChartsData {
    * @param {*} formData
    */
   static setBarGraph (tableConfig, chartData, formData) {
-    const {multiple, hideGrid, showData, themeColor = 'multicolor'} = formData
+    const {multiple, chartTitle, hideGrid, showData, themeColor = 'multicolor'} = formData
     const {yAxisData, seriesData} = this.handleBarConfig(tableConfig, multiple);
     chartData.yAxisData = yAxisData;
     chartData.seriesData = seriesData;
     chartData.hideGrid = hideGrid;
     chartData.showData = showData;
     chartData.axisColor = this.colorType[themeColor];
+    chartData.chartTitle = chartTitle
     return chartData
   }
 
@@ -242,9 +246,10 @@ export class handlerChartsData {
    * @param {*} formData
    */
   static setKeyWord (tableConfig, chartData, formData) {
-    const {multiple, themeColor = 'multicolor'} = formData
+    const {multiple, chartTitle, themeColor = 'multicolor'} = formData
     chartData.seriesData = this.handleKeyWord(tableConfig, multiple)
     chartData.colorList = this.colorType[themeColor];
+    chartData.chartTitle = chartTitle
     return chartData
   }
   static handleKeyWord (tableConfig, multiple = 1) {
@@ -269,13 +274,14 @@ export class handlerChartsData {
    * @param charData
    * @param formData
    */
-  static setMap (tableConfig, charData, formData) {
+  static setMap (tableConfig, chartData, formData) {
     echarts.registerMap('demo', china);
-    const {multiple, themeColor = 'multicolor'} = formData
+    const {multiple, chartTitle, themeColor = 'multicolor'} = formData
     const seriesData = this.handleKeyWord(tableConfig, multiple)
-    charData.seriesData = seriesData
-    charData.inRangeColor = ['#e0ffff', this.colorType[themeColor][0]]
-    return charData
+    chartData.seriesData = seriesData
+    chartData.inRangeColor = ['#e0ffff', this.colorType[themeColor][0]]
+    chartData.chartTitle = chartTitle
+    return chartData
   }
 
 

@@ -1,36 +1,32 @@
 <template>
   <div id="excelTable">
-    <div style="display: inline-block;float: right;">
-      <el-button size="mini" type="primary" @click="consoleDatas">打印数据</el-button>
+    <div style="display: inline-block;float: left;margin-bottom: 10px">
+      <el-button size="mini" type="primary" @click="consoleDatas">保存数据</el-button>
       <el-button size="mini" type="primary" @click="addRow">增加行</el-button>
       <el-popconfirm title="确定删除最后行吗？" @onConfirm="delLastRow">
-        <el-button slot="reference" type="primary" size="mini">删除末行</el-button>
+        <el-button style="margin-left: 10px" slot="reference" type="primary" size="mini">删除指定行</el-button>
       </el-popconfirm>
     </div>
-    <el-table :data="tableData" border style="width: 100%;margin-top:10px" @header-contextmenu="colRightClick">
+    <el-table :data="tableData"
+              border style="width: 100%;margin-top:10px"
+              @header-contextmenu="colRightClick"
+              @selection-change="handleSelectionChange"
+              max-height="250"
+    >
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column v-if="tableCols.length > 0" type="index" :label="'编号'" :width="50"></el-table-column>
       <el-table-column v-for="(column, idx) in tableCols" :key="idx" :index="idx">
         <!--label-->
         <template slot="header" slot-scope="scope1">
-          <p v-show="column.show" @dblclick="column.show=false">
-            {{column.txt}}
-          </p>
           <el-input
             size="mini"
-            v-show="!column.show"
-            v-model="column.txt"
-            @blur="column.show=true">
+            v-model="column.txt">
           </el-input>
         </template>
         <!--prop-->
         <template slot-scope="scope">
-          <p v-show="scope.row[column.col].show" @dblclick="scope.row[column.col].show=false">
-            {{scope.row[column.col].content}}
-          </p>
           <el-input
-            v-show="!scope.row[column.col].show"
-            v-model="scope.row[column.col].content"
-            @blur="scope.row[column.col].show=true">
+            v-model="scope.row[column.col].content">
           </el-input>
         </template>
       </el-table-column>
@@ -81,7 +77,7 @@
     },
     methods: {
       colRightClick (column, event) {
-        const fatherDom = document.getElementById('excelTable')
+        const fatherDom = document.getElementById('dataEditing')
         const fatherClientRect = fatherDom.getBoundingClientRect()
         window.event.returnValue = false; //阻止浏览器自带的右键菜单弹出
         if (!column.index && column.index !== 0) return;
@@ -107,26 +103,33 @@
       addColumn (idx) { // 新增列
         this.showMenu = false
         let obj = {col: 'col_' + this.count_col++, txt: '', show: true}
-        if (idx || idx === 0) this.tableCols.splice(idx, 0, obj);
-        else this.tableCols.push(obj);
+        let tableCols = this.tableCols
+        this.tableCols =[]
+        this.$nextTick(() => {
+          if (idx || idx === 0) tableCols.splice(idx, 0, obj);
+          else tableCols.push(obj);
+          this.tableCols = tableCols
+        })
         let _this = this
         this.tableData.map(p => { // 新增的对象无法被vue监听到
           _this.$set(p, obj.col, {content: '', show: true})
-//				p[obj.col] = {content: '', show: true}
         })
       },
       delColumn () { // 删除列
         this.showMenu = false
         let colKey = this.tableCols[this.curColumn].col;
-        this.tableCols.splice(this.curColumn, 1);
-        this.tableData.map(p => {
-          delete p[colKey];
-        });
-      },
+        let tableCols = this.tableCols.filter(item => item.col !== colKey)
+        this.tableCols = []
+        this.$nextTick(() => {
+          this.tableCols = tableCols
+        })
+        },
       delLastRow () { // 删除行
         this.showMenu = false
         let len = this.tableData.length;
-        if (len > 0) this.tableData.splice(len - 1, 1);
+        if (len > 0) {
+          this.tableData = this.multipleSelection
+        }
         else this.$message.error('没有可删除行');
       },
       // 保存數據
@@ -158,15 +161,18 @@
           })
           this.tableData = testData
         }
+      },
+      // 选择框
+      handleSelectionChange (val) {
+        this.multipleSelection = this.tableData.filter((v) => { return val.indexOf(v) == -1 })
       }
     }
   }
 </script>
 
 <style>
-  #excelTable {
+  #dataEditing {
     position: relative;
-
   }
 
   #excelTable .el-table th,

@@ -1,12 +1,13 @@
 <template>
   <table
     class="reportTable"
-    style="table-layout: fixed"
+    style="table-layout: fixed;max-height: 250px;overflow: auto"
     v-loading="loading"
     :id="dragId"
     cellspacing="0"
     cellpadding="2"
     width="100%"
+
     border="1"
   >
     <tbody>
