@@ -23,28 +23,28 @@
         activeName: '1',
         eChartId: 'eChartId',
         dialogVisible: false,
-        tableColumnAndProp: {
+        tableColumnAndProp:  {
           tableColumn: [
             {
               label: "",
               prop: "YData",
             },
             {
-              label: "上海",
+              label: "11/11",
               prop: "data1",
             },
             {
-              label: "江苏",
+              label: "11/12",
               prop: "data2",
             },
             {
-              label: "北京",
+              label: "11/13",
               prop: "data3",
             },
           ],
           tablePropData: {
             "header-cell-style": {},
-            data: [
+            data:  [
               {
                 YData: '',
                 data2: 54,
@@ -53,21 +53,15 @@
               },
               {
                 YData: '',
-                data2: 34,
-                data1: 33,
-                data3: 65,
-              },
-              {
-                YData: '',
-                data2: 21,
+                data2: 54,
                 data1: 23,
-                data3: 45,
+                data3: 12,
               },
               {
                 YData: '',
-                data2: 23,
-                data1: 65,
-                data3: 22,
+                data2: 54,
+                data1: 23,
+                data3: 12,
               },
             ],
           },

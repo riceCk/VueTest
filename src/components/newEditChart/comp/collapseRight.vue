@@ -29,6 +29,7 @@
             </div>
           </el-tab-pane>
           <el-tab-pane label="属性设置" name="second">
+            {{formOptions}}111111111111111111
             <el-form ref="styleData" :model="formData" label-width="100px" class="formClass">
               <el-form-item
                 v-for="(item, index) in formOptions"
@@ -240,7 +241,9 @@
       },
       // 具体charts类型
       handleChart (item) {
-        this.formOptions = this.navMenuList.filter(it => it.value === item.father)[0].formOptions || {}
+        this.$nextTick(() => {
+          this.formOptions = this.navMenuList.filter(it => it.value === item.father)[0].formOptions || {}
+        })
         switch (item.value.split('-')[0]) {
           case 'excel':
             this.optionConfig = null
