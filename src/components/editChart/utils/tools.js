@@ -8,6 +8,7 @@ export class tools {
     const randomNum = parseInt((1 + Math.random()) * 65536) + ''
     return (+(randomNum + timestamp)).toString(32)
   }
+
   // elementui日期时间范围 快捷选项
   static pickerOptionsRange = {
     shortcuts: [
@@ -77,5 +78,39 @@ export class tools {
         }
       }
     ]
+  }
+
+  // {a: 123, b:{c:222｝}
+  // b.c
+  static getVal (val, name) {
+    let array = name.split(".");
+    let newVal = {...val};
+    array.forEach((item) => {
+      newVal = newVal[item];
+    });
+    return newVal;
+  }
+
+  /**
+   * 对象的反扁平化
+   * @param data
+   * @return {*}
+   */
+  static unFlatten (data) {
+    if (Object(data) !== data || Array.isArray(data))
+      return data;
+    let result = {}, cur, prop, idx, last, temp;
+    for (let p in data) {
+      cur = result, prop = "", last = 0;
+      do {
+        idx = p.indexOf(".", last);
+        temp = p.substring(last, idx !== -1 ? idx : undefined);
+        cur = cur[prop] || (cur[prop] = (!isNaN(parseInt(temp)) ? [] : {}));
+        prop = temp;
+        last = idx + 1;
+      } while (idx >= 0);
+      cur[prop] = data[p].content;
+    }
+    return result[""];
   }
 }

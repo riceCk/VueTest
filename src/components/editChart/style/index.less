@@ -1,0 +1,148 @@
+* {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.chart-edit .el-dialog {
+  border: 1px solid #EBEDF0;
+  box-shadow: 0 0 20px 0 rgba(195, 198, 204, 0.5);
+}
+.chart-wrapper {
+  display: flex;
+  padding: 30px;
+  table,
+  table tr th,
+  table tr td {
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 14px;
+  }
+  table {
+    border-spacing: 0;
+    table-layout: initial;
+    border-collapse: collapse;
+  }
+  .reportTable td {
+    padding: 8pt 5.4pt 8pt 5.4pt;
+    font-family: '仿宋', FangSong;
+  }
+  .reportTable .table-harder {
+    text-align: center;
+    font-weight: bolder;
+  }
+  .reportTable .table-content {
+    color: #606266;
+  }
+}
+
+.chart-db-col-left {
+  padding: 30px 0;
+  flex: 1;
+  margin-right: 30px;
+  border: 1px solid #EBEDF0;
+  .el-button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+}
+.chart-db-col-right {
+  width: 490px;
+  border: 1px solid #EBEDF0;
+  border-radius: 4px;
+  .chart-selection {
+    display: flex;
+    .navMenu {
+      flex: 0 0 82px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #EBEDF0;
+      li {
+        padding: 13px 0;
+        font-size: 14px;
+        color: #4A4A4D;
+        cursor: pointer;
+        &.active {
+          color: #409EFF;
+        }
+      }
+    }
+    .chart-content {
+      height: 500px;
+      overflow: auto;
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1;
+      .menu-item {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        color: #4A4A4D;
+        cursor: pointer;
+        img {
+          width: 100px;
+          height: 80px;
+          margin-bottom: 14px;
+        }
+      }
+    }
+  }
+  .formClass {
+    width: 80%;
+    text-align: left;
+  }
+  .el-collapse-item__header {
+    padding-left: 20px;
+    background: #F7F8FA;
+    border: 1px solid #EBEDF0;
+    border-radius: 4px 4px 0 0;
+    font-size: 15px;
+    color: #4A4A4D;
+    font-weight: bolder;
+    .el-collapse-item__arrow {
+      color: #AFB0B3
+    }
+  }
+  .el-tabs__nav {
+    width: 100%;
+    display: flex;
+    .el-tabs__item {
+      flex: 1;
+    }
+  }
+  .el-collapse-item__wrap {
+    padding: 10px;
+    border: 0;
+    .el-tabs__header {
+      margin: 0;
+      .el-tabs__item.is-active {
+        background-color: #F7F8FA;
+      }
+    }
+  }
+  .el-tabs__content {
+    height: 500px;
+    border: 1px solid #EBEDF0;
+  }
+  .themeColor {
+    padding: 30px 20px;
+    text-align: left;
+    p {
+      margin-bottom: 20px;
+    }
+    li {
+      padding: 8px;
+      width: 165px;
+      display: flex;
+      margin-bottom: 20px;
+      cursor: pointer;
+      &.activeColor {
+        background-color: #F2F3F5;
+      }
+    }
+    .boxColor {
+      width: 20px;
+      height: 14px;
+    }
+  }
+}

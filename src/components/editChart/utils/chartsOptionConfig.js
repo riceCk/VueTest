@@ -10,6 +10,8 @@ export class handlerChartsOptionConfig {
    * @param fontSize 字体大小可选
    * @param xAxisData x轴类容
    * @param seriesData 整体y轴样式
+   * @param seriesData 整体y轴是否平滑
+   * @param seriesData 整体y轴显示峰值
    * @param hideGrid 是否去网格线
    * @param selected {Object} 默认不展示
    */
@@ -23,13 +25,24 @@ export class handlerChartsOptionConfig {
       fontSize,
       xAxisData = ["06/07", "06/08", "06/09", "06/10", "06/11"],
       seriesData,
-      hideGrid = true,
-      selected
+      seriesSmooth = false,
+      seriesMarkPoint = {},
+      selected,
+      hideGrid = false,
+      chartTitle,
     }) {
+    seriesData.forEach(item => {
+      item.smooth = seriesSmooth
+      item.markPoint = seriesMarkPoint
+    })
     return {
       color,
       tooltip: {
         trigger: "axis"
+      },
+      title: {
+        left: 'center',
+        text: chartTitle,
       },
       grid: {
         left: '5%',
@@ -70,9 +83,9 @@ export class handlerChartsOptionConfig {
         {
           type: "value",
           splitLine: {
-            show: !hideGrid
+            show: hideGrid
           },
-          splitArea: { show: false }, //去除网格区域
+          splitArea: {show: false}, //去除网格区域
           axisLabel: {
             textStyle: {
               fontSize: "18"
@@ -91,13 +104,12 @@ export class handlerChartsOptionConfig {
    * @param seriesRadius 两个圆大小可选
    * @param formatter 是否隐藏数值
    * @param seriesData 具体数值
+   * @param roseType 玫瑰
    */
   static drawPieChart (
     {
       titleTop = 20,
-      titleColor = "red",
       titleFontSize = "16",
-      titleLeft = "right",
       legendRight = "0",
       legendBottom = "50",
       legendShow = true,
@@ -107,21 +119,14 @@ export class handlerChartsOptionConfig {
       seriesRadius = ["45%", "65%"],
       formatter = '{b} {c}条 \n {d}%',
       labelFontSizeColor = '#333333',
+      roseType = '',
+      chartTitle,
       seriesData = [
-        { value: 335, name: "直接访问" },
-        { value: 310, name: "邮件营销" }
+        {value: 335, name: "直接访问"},
+        {value: 310, name: "邮件营销"}
       ],
     }) {
     return {
-      title: {
-        top: titleTop || 30,
-        textStyle: {
-          color: titleColor || "red",
-          fontWeight: "bold",
-          fontSize: titleFontSize || 16
-        },
-        left: titleLeft || "right"
-      },
       tooltip: {
         trigger: "item",
         formatter: "{b}: {c} ({d}%)"
@@ -133,6 +138,15 @@ export class handlerChartsOptionConfig {
           }
         }
       },
+      title: {
+        top: titleTop || 30,
+        text: chartTitle,
+        // textStyle: {
+        //   fontWeight: "bold",
+        //   fontSize: titleFontSize || 16
+        // },
+        left: 'center',
+      },
       legend: {
         show: legendShow,
         orient: "vertical",
@@ -140,19 +154,6 @@ export class handlerChartsOptionConfig {
         bottom: legendBottom || 50,
         right: legendRight || 0,
         data: legendData || ["直接访问", "邮件营销"],
-        formatter: function (name) {
-          // 获取legend显示内容
-          let data = option.series[0].data;
-          let total = 0;
-          let tarValue = 0;
-          for (let i = 0, l = data.length; i < l; i++) {
-            total += data[i].value;
-            if (data[i].name == name) {
-              tarValue = data[i].value;
-            }
-          }
-          return `${name}`;
-        }
       },
       series: [
         {
@@ -165,7 +166,7 @@ export class handlerChartsOptionConfig {
               color: labelFontSizeColor,
               fontWeight: 'bolder', // 如10%
               trigger: "item",
-              show: true,
+              show: !!formatter,
               formatter: formatter,
               textStyle: {
                 fontSize: 18    //文字的字体大小
@@ -182,42 +183,93 @@ export class handlerChartsOptionConfig {
               }
             }
           },
-          data: seriesData
+          data: seriesData,
+          roseType: roseType
         },
       ]
     };
   }
+
   /**
    * 柱状图
    * @param xAxisData
    * @param seriesColor 柱状图颜色
    * @param seriesData 柱状图数据
    * @param hideGrid 是否去网格
+   * @param labelShow 是否显示数据
    */
   static drawHistogramChart (
     {
-      hideGrid,
-      xAxisData = ["微信", "百度搜索", "百度贴吧"],
+      hideGrid = false,
+      labelShow = false,
+      legendData = [],
+      xAxisData = [],
       seriesColor = ['#F49D1A', '#F49D1A', '#F49D1A'],
-      seriesData = [{
-        name: "微信",
-        value: 21327
-      }, {
-        name: "百度搜索",
-        value: 32423
-      }, {
-        name: "百度贴吧",
-        value: 12153
-      },]
+      seriesData = [],
+      chartTitle
     }
   ) {
+    function handlerFormatter (val) {
+      if (!val) {
+        return val;
+      }
+      if (true) {
+        return val
+      } else {
+        return val.length > 8 ? val.substring(0, 8).split('').join('\n') + '\n...' : val.split('').join('\n');
+      }
+    }
+    let series = []
+    seriesData.forEach((item, index) => {
+      let val = item.map(item => ({value: item}))
+      series.push({
+        name: legendData[index],
+        type: 'bar',
+        barWidth: 20,
+        data:  val,
+        itemStyle: {
+          normal: {
+            color (params) {
+              return seriesColor[index];
+            },
+            barBorderRadius: [30, 30, 0, 0],
+            shadowBlur: 10,
+            shadowColor: 'rgba(0, 103, 255, 0.2)',
+            shadowOffsetX: -5,
+            shadowOffsetY: 5,
+          }
+        },
+        label: {
+          normal: {
+            show: labelShow,
+            fontSize: 18,
+            color: '#333',
+            position: 'top',
+          }
+        },
+      })
+    })
     return {
+      title: {
+        left: 'center',
+        text: chartTitle,
+      },
       toolbox: {
         feature: {
           saveAsImage: {
             title: '下载'
           }
         }
+      },
+      color: seriesColor,
+      tooltip: {
+        trigger: 'axis',
+        // axisPointer: { // 坐标轴指示器，坐标轴触发有效
+        //   type: 'line' // 默认为直线，可选为：'line' | 'shadow'
+        // }
+      },
+      legend: {
+        data: legendData
       },
       grid: {
         left: '2%',
@@ -236,10 +288,7 @@ export class handlerChartsOptionConfig {
               fontSize: '18',
             },
             formatter (val) {
-              if (!val) {
-                return val;
-              }
-              return val.length > 8 ? val.substring(0, 8).split('').join('\n') + '\n...' : val.split('').join('\n');
+              return handlerFormatter(val)
             }
           }
         },
@@ -248,7 +297,7 @@ export class handlerChartsOptionConfig {
         {
           type: "value",
           splitLine: {
-            show: !hideGrid
+            show: hideGrid
           },
           axisLabel: {
             textStyle: {
@@ -257,40 +306,16 @@ export class handlerChartsOptionConfig {
           }
         }
       ],
-      series: [
-        {
-          type: 'bar',
-          barWidth: 20,
-          data: seriesData || [],
-          itemStyle: {
-            normal: {
-              color (params) {
-                const colorList = seriesColor || ['#F49D1A'];
-                return colorList[params.dataIndex];
-              },
-              barBorderRadius: [30, 30, 0, 0],
-              shadowBlur: 10,
-              shadowColor: 'rgba(0, 103, 255, 0.2)',
-              shadowOffsetX: -5,
-              shadowOffsetY: 5,
-            }
-          },
-          label: {
-            normal: {
-              show: true,
-              fontSize: 18,
-              color: '#333',
-              position: 'top',
-            }
-          },
-        }
-      ]
+      series: series
     }
   }
+
   /**
    * 条形图
    * @param barWidth 柱子的宽度
    * @param axisColor 颜色
+   * @param hideGrid 是否显示网格
+   * @param showData 是否显示数据
    * @param yAxisData 文本数值 []
    * @param seriesData 数值 []
    */
@@ -298,6 +323,9 @@ export class handlerChartsOptionConfig {
     {
       barWidth,
       axisColor,
+      hideGrid = false,
+      showData = false,
+      chartTitle,
       yAxisData = ["网易号", "百度搜索", "一点资讯", "搜狐新闻App", "腾讯新闻", "新闻_检索", "百家号", "今日头条", "新浪微博", "微信"],
       seriesData = [311, 364, 407, 412, 702, 737, 765, 1813, 6050, 6858]
     }
@@ -307,8 +335,11 @@ export class handlerChartsOptionConfig {
     for (let i = 0; i < seriesData.length; i++) {
       backGroundData.push(maxNum * 1.1)
     }
-    console.log(backGroundData, 1231)
     const option = {
+      title: {
+        left: 'center',
+        text: chartTitle,
+      },
       toolbox: {
         feature: {
           saveAsImage: {
@@ -329,44 +360,46 @@ export class handlerChartsOptionConfig {
       },
       xAxis: {
         type: "value",
-        show: false,
+        show: hideGrid,
         splitLine: {
           show: false
         },
         axisTick: {
-          show: false
+          show: hideGrid
         },
         axisLine: {
-          show: false
+          show: hideGrid
         }
       },
-      yAxis: [{
-        type: 'category',
-        inverse: true,
-        axisLine: {
-          show: false //坐标线
+      yAxis: [
+        {
+          type: 'category',
+          inverse: true,
+          axisLine: {
+            show: false //坐标线
+          },
+          axisTick: {
+            show: false //小横线
+          },
+          axisLabel: {
+            color: '#999' //坐标轴字颜色
+          },
+          data: yAxisData
         },
-        axisTick: {
-          show: false //小横线
-        },
-        axisLabel: {
-          color: '#999' //坐标轴字颜色
-        },
-        data: yAxisData
-      }, {
-        type: 'category',
-        inverse: true,
-        axisTick: 'none',
-        axisLine: 'none',
-        show: true,
-        axisLabel: {
-          textStyle: {
+        {
+          type: 'category',
+          inverse: true,
+          axisTick: 'none',
+          axisLine: 'none',
+          show: showData,
+          axisLabel: {
+            textStyle: {
               color: '#333',
               fontSize: '12'
+            },
           },
-        },
-        data:seriesData
-    }],
+          data: seriesData
+        }],
       series: [
         {
           name: '值',
@@ -394,22 +427,23 @@ export class handlerChartsOptionConfig {
           data: seriesData
         },
         {
-            name: '背景',
-            type: 'bar',
-            barWidth: barWidth || 20,
-            barGap: '-100%',
-            data: backGroundData,
-            itemStyle: {
-                normal: {
-                    color: '#f8f8f8',
-                    barBorderRadius: 30,
-                }
-            },
+          name: '背景',
+          type: 'bar',
+          barWidth: barWidth || 20,
+          barGap: '-100%',
+          data: backGroundData,
+          itemStyle: {
+            normal: {
+              color: '#f8f8f8',
+              barBorderRadius: 30,
+            }
+          },
         },
       ]
     };
     return option
   }
+
   /**
    * 关键词云
    * @param colorList {Array} 颜色数组
@@ -424,10 +458,15 @@ export class handlerChartsOptionConfig {
       colorList,
       seriesData,
       sizeRange,
-      maskImage
+      maskImage,
+      chartTitle
     }
   ) {
     const option = {
+      title: {
+        left: 'center',
+        text: chartTitle,
+      },
       tooltip: {
         show: true
       },
@@ -439,35 +478,83 @@ export class handlerChartsOptionConfig {
         }
       },
       series: [{
-          type: "wordCloud",
-          sizeRange: sizeRange,
-          rotationRange: [0, 0],
-          maskImage: maskImage,
-          width: "90%",
-          textPadding: 0,
-          autoSize: {
-            enable: true,
-            minSize: 14
-          },
-          textStyle: {
-            normal: {
-              color: function () {
-                let color = colorList[
-                  Math.floor(Math.random() * colorList.length + 1) - 1
+        type: "wordCloud",
+        sizeRange: sizeRange,
+        rotationRange: [0, 0],
+        maskImage: maskImage,
+        width: "90%",
+        textPadding: 0,
+        autoSize: {
+          enable: true,
+          minSize: 14
+        },
+        textStyle: {
+          normal: {
+            color: function () {
+              let color = colorList[
+              Math.floor(Math.random() * colorList.length + 1) - 1
                 ]
-                return color
-              }
-            },
-            emphasis: {
-              shadowBlur: 12,
-              shadowColor: "#333"
+              return color
             }
           },
-          data: seriesData,
-        }]
+          emphasis: {
+            shadowBlur: 12,
+            shadowColor: "#333"
+          }
+        },
+        data: seriesData,
+      }]
     };
     return option
   }
+
+  /**
+   * 地图
+   * @param seriesData 数据
+   */
+  static drawMapChart (
+    {
+      chartTitle,
+      seriesData = [],
+      inRangeColor = ["#e0ffff", "#006edd"]
+    }
+  ) {
+    const Max = Math.max.apply(Math, seriesData.map(function (o){return o.value}))
+    return {
+      title: {
+        left: 'center',
+        text: chartTitle,
+      },
+      dataRange: {
+        min: 0, //颜色区间的最小值
+        max: Max + 10, //颜色区间的最大值，和data中的最大值一致
+        x: "left",
+        y: "bottom",
+        text: ["高", "低"], // 文本，默认为数值文本
+        calculable: true,
+        inRange: {
+          //颜色区间
+          color: inRangeColor,
+        },
+      },
+      tooltip: {
+        trigger: "item",
+      },
+      series: [
+        {
+          name: '',
+          type: "map",
+          map: "demo",
+          itemStyle: {
+            normal: { label: { show: true } },
+            emphasis: { label: { show: true } },
+          },
+          data: seriesData,
+        },
+      ],
+    }
+  }
+
   /**
    * 路径图
    * @param titleText {strting}
@@ -485,10 +572,12 @@ export class handlerChartsOptionConfig {
         }]
       }
    */
-  static drawPathChart ({
-    seriesData,
-    wordCount
-  }) {
+  static drawPathChart (
+    {
+      seriesData,
+      wordCount
+    }
+  ) {
     const option = {
       tooltip: {
         trigger: "item",
@@ -509,7 +598,7 @@ export class handlerChartsOptionConfig {
           left: '20%',      //左
           bottom: '1%',    //下
           right: '8%',    //右的距离
-          initialTreeDepth:1,//展开层级为一层
+          initialTreeDepth: 1,//展开层级为一层
           label: {         //每个节点所对应的标签的样式
             normal: {
               position: 'left',       //标签的位置
@@ -539,7 +628,7 @@ export class handlerChartsOptionConfig {
                 formatter: function (val) {
                   if (val.name) {
                     let strs = val.name.split(''); //字符串数组
-                    if (strs.length >  10) {
+                    if (strs.length > 10) {
                       strs = strs.slice(0, 10)
                       strs.push('...')
                     }
