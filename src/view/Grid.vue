@@ -4,6 +4,7 @@
       @handleEditChart="handleEditChart"
       :tableColumn="tableColumn"
       :tablePropData="tablePropData"
+      :authorityMenu="authorityMenu"
       :type="type"
       :formData="formData"
       :dialogVisible.sync="dialogVisible">
@@ -13,7 +14,7 @@
 
 
 <script>
-  import newEditChart from '../components/editChart/index'
+  import newEditChart from '../components/newEditChart/index'
   export default {
     name: 'charts',
     components: {
@@ -71,6 +72,7 @@
           value: 'line-1',
           father: 'line',
         },
+        authorityMenu: [],
         formData: {
           chartTitle: '飞花禁忌'
         }

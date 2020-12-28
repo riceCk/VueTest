@@ -1,5 +1,4 @@
 import echarts from "echarts";
-import china from "echarts/map/json/china";
 
 export class handlerChartsData {
   static colorType = {
@@ -48,7 +47,7 @@ export class handlerChartsData {
                 },
                 {
                   offset: 0,
-                  color: this.colorType[themeColor][index],
+                  color: this.colorType[themeColor][index] || this.colorType[themeColor][7],
                 },
               ]),
             },
@@ -118,7 +117,7 @@ export class handlerChartsData {
     // 是否隐藏数值
     if (formatterPercentage || formatterNumber) {
       if (formatterPercentage) chartData.formatter = "{b} {d}%"
-      if (formatterNumber) chartData.formatter = "{b} {d}%"
+      if (formatterNumber) chartData.formatter = "{b} {c}条"
       if (formatterNumber && formatterPercentage) chartData.formatter = "{b} {c}条 \n {d}%"
     }
     chartData.seriesColor = this.colorType[themeColor]
@@ -213,7 +212,7 @@ export class handlerChartsData {
     chartData.seriesData = seriesData;
     chartData.hideGrid = hideGrid;
     chartData.showData = showData;
-    chartData.axisColor = this.colorType[themeColor];
+    chartData.axisColor = [...this.colorType[themeColor]];
     chartData.chartTitle = chartTitle
     return chartData
   }
@@ -248,6 +247,7 @@ export class handlerChartsData {
   static setKeyWord (tableConfig, chartData, formData) {
     const {multiple, chartTitle, themeColor = 'multicolor'} = formData
     chartData.seriesData = this.handleKeyWord(tableConfig, multiple)
+    chartData.sizeRange = [12, 30]
     chartData.colorList = this.colorType[themeColor];
     chartData.chartTitle = chartTitle
     return chartData
@@ -275,7 +275,6 @@ export class handlerChartsData {
    * @param formData
    */
   static setMap (tableConfig, chartData, formData) {
-    echarts.registerMap('demo', china);
     const {multiple, chartTitle, themeColor = 'multicolor'} = formData
     const seriesData = this.handleKeyWord(tableConfig, multiple)
     chartData.seriesData = seriesData

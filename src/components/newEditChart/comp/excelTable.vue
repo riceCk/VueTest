@@ -9,7 +9,8 @@
     </div>
     <el-table :data="tableData"
               border style="width: 100%;margin-top:10px"
-              @header-contextmenu="colRightClick"
+              @header-contextmenu="headerRightClick"
+              @row-contextmenu="rowRightClick"
               @selection-change="handleSelectionChange"
               max-height="250"
     >
@@ -26,7 +27,7 @@
         <!--prop-->
         <template slot-scope="scope">
           <el-input
-            v-model="scope.row[column.col].content">
+            v-model="scope.row[column.col] && scope.row[column.col].content">
           </el-input>
         </template>
       </el-table-column>
@@ -60,12 +61,14 @@
     watch: {
       '$attrs.tableColumnAndProp': {
         handler (newVal, oldVal) {
+          this.tableData = []
           const {tableColumn, tablePropData} = newVal
           this.tableCols = tableColumn.map(item => {
             return {
               col: item.prop,
               txt: item.label,
-              show: true
+              show: true,
+              renderCell: item.renderCell || null
             }
           })
           this.setTestData(tablePropData)
@@ -76,7 +79,8 @@
     mounted () {
     },
     methods: {
-      colRightClick (column, event) {
+      // 某一列头部右击触发的事件
+      headerRightClick (column, event) {
         const fatherDom = document.getElementById('dataEditing')
         const fatherClientRect = fatherDom.getBoundingClientRect()
         window.event.returnValue = false; //阻止浏览器自带的右键菜单弹出
@@ -90,6 +94,10 @@
           ele.style.left = 'unset'
           ele.style.right = 0
         }
+      },
+      rowRightClick (row, index, key) {
+        window.event.returnValue = false;
+        console.log(row, index, key)
       },
       addRow () { // 新增行
         this.showMenu = false
@@ -148,6 +156,12 @@
             obj[item.col] = {
               content: '',
               show: true
+            }
+            if(Object.prototype.toString.call(item.renderCell) === '[object Object]') {
+              obj[item.renderCell.prop] = {
+                content: "",
+                show: true
+              }
             }
           })
           let testData = []

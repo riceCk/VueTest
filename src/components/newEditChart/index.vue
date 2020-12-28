@@ -1,28 +1,36 @@
 <template>
-  <el-drawer
-    class="chart-edit"
-    :with-header="false"
-    :visible="dialogVisible"
-    size="85%"
-    @close="onClose"
-  >
+  <!--<el-drawer-->
+    <!--:wrapperClosable="false"-->
+    <!--class="chart-edit"-->
+    <!--:with-header="false"-->
+    <!--:visible="dialogVisible"-->
+    <!--size="85%"-->
+    <!--@close="onClose"-->
+  <!--&gt;-->
+  <section class="chart-edit">
     <section class="chart-wrapper">
       <collapseLeft
         ref="collapseLeft"
+        :chartStyle="chartStyle"
         :optionConfig="optionConfig"
+        :editType="editType"
+        :editFormData="editFormData"
         :tableColumnAndProp="tableColumnAndProp">
       </collapseLeft>
       <collapseRight
         :tableColumnAndProp="tableColumnAndProp"
+        :editType="editType"
+        :editFormData="editFormData"
         @handleColumnAndData="handleColumnAndData"
-        @handleOption="handleOption">
+        @handleCollapseRightConfig="handleCollapseRightConfig">
       </collapseRight>
     </section>
-    <section>
+    <section style="text-align: center">
       <el-button type="success" @click="onSave">保存</el-button>
       <el-button type="primary" @click="onClose">取消</el-button>
     </section>
-  </el-drawer>
+  </section>
+  <!--</el-drawer>-->
 
 </template>
 
@@ -40,17 +48,56 @@
     },
     props: {
       dialogVisible: {
-        type: Boolean
+        type: Boolean,
+        default: false
       },
-      tableColumnAndProp: {
+      tableColumn: {
+        type: Array,
+        default: () => {
+          return [{
+            label: "",
+            prop: "YData",
+          }, {
+            label: "A",
+            prop: "data1",
+          }, {
+            label: "B",
+            prop: "data2",
+          },]
+        }
+      },
+      tablePropData: {
         type: Object,
-        default () {
+        default: () => {
           return {
-            tableColumn: [],
-            tablePropData: {},
-            type: {},
-            formData: {},
+            "header-cell-style": {
+              background: "red",
+              color: "#fff",
+            },
+            data: [{
+              YData: '类型',
+              data2: 54,
+              data1: 23,
+            }],
           }
+        }
+      },
+      type: {
+        type: Object,
+        default: () => {
+          return {}
+        }
+      },
+      formData: {
+        type: Object,
+        default: () => {
+          return {}
+        }
+      },
+      authorityMenu: {
+        type: Array,
+        default: () => {
+          return []
         }
       }
     },
@@ -58,26 +105,75 @@
       return {
         eChartId: 'eChartId',
         myChart: '',
-        /**option, type, formData**/
+        tableColumnAndProp: {},
         optionConfig: null,
+        editType: {},
+        editFormData: {},
+        chartStyle: 'width: 100%;height:500px;'
       }
     },
     computed: {},
-    watch: {},
+    watch: {
+      dialogVisible (val) {
+        if (val) {
+          this.initData()
+          this.$nextTick(() => {
+            this.setMychart()
+          })
+        }
+      }
+    },
     created () {
     },
     mounted () {
+      this.initData()
     },
     methods: {
+      setMychart () {
+        //获取父元素
+        let echarts = this.$refs.collapseLeft.$el
+        //获取父元素宽高
+        if (echarts) {
+          let echartsWidth = this.getStyle(echarts, 'width');
+          this.chartStyle = `width: ${echartsWidth};height:500px;`
+        }
+
+      },
+      getStyle (obj, attr) {
+        if (obj.currentStyle) {
+          return obj.currentStyle[attr];
+        } else {
+          return document.defaultView.getComputedStyle(obj, null)[attr];
+        }
+      },
+      initData () {
+        const tableColumnAndProp = {}
+        tableColumnAndProp.tableColumn = this.tableColumn
+        tableColumnAndProp.tablePropData = this.tablePropData
+        tableColumnAndProp.authorityMenu = this.authorityMenu
+        this.tableColumnAndProp = JSON.parse(JSON.stringify(tableColumnAndProp))
+        this.editType = this.type
+        this.editFormData = this.formData
+      },
       // 数据回显
       /**
        * {option, type, formData}
        * @param optionConfig
        */
-      handleOption (optionConfig) {
-        this.optionConfig = optionConfig
+      /**
+       * 优化tableColumnAndProp赋值
+       */
+      handleCollapseRightConfig (optionConfig) {
+        const {option, type, formData} = optionConfig
+        this.editType = type
+        this.editFormData = formData
+        this.optionConfig = option
       },
       // 孙级组件传表格参数
+      /**
+       * 优化tableColumnAndProp赋值
+       * @param data
+       */
       handleColumnAndData (data) {
         const {tableCols, tableData} = data
         this.tableColumnAndProp.tableColumn = tableCols.map(item => {
@@ -93,10 +189,15 @@
         this.tableColumnAndProp.tablePropData.data = tableArrayData
       },
       onSave () {
+        const tableColumnAndProp = {
+          ...this.tableColumnAndProp,
+          type: this.editType,
+          formData: this.editFormData,
+          image: this.$refs.collapseLeft.myChart && this.$refs.collapseLeft.myChart.getDataURL({})
+        }
         this.$emit('handleEditChart', {
-          tableColumnAndProp: this.tableColumnAndProp,
           optionConfig: this.optionConfig,
-          image: this.$refs.collapseLeft.myChart.getDataURL({})
+          tableColumnAndProp: tableColumnAndProp,
         })
         this.onClose()
       },

@@ -29,8 +29,7 @@
             </div>
           </el-tab-pane>
           <el-tab-pane label="属性设置" name="second">
-            {{formOptions}}111111111111111111
-            <el-form ref="styleData" :model="formData" label-width="100px" class="formClass">
+            <el-form ref="styleData" :model="formData" label-width="120px" class="formClass">
               <el-form-item
                 v-for="(item, index) in formOptions"
                 :key="newKeys[index]"
@@ -69,6 +68,7 @@
 
 <script>
   import wordcloud from "echarts-wordcloud";
+  import echarts from "echarts";
   import navMenuList from '../utils/navMenuList';
   import {handlerChartsOptionConfig} from '../utils/chartsOptionConfig';
   import {handlerChartsData} from '../utils/handlerChartsData';
@@ -87,6 +87,8 @@
       tableColumnAndProp: {
         type: Object,
       },
+      editType: {},
+      editFormData: {}
     },
     data () {
       return {
@@ -197,9 +199,11 @@
       },
     },
     watch: {
+      // 优化进行节流
       optionConfig: {
-        handler (val) {
-          this.$emit('handleOption', {
+        handler (val, oldVal) {
+          // if (JSON.stringify(val) == JSON.stringify(oldVal)) return
+          this.$emit('handleCollapseRightConfig', {
             option: val,
             type: this.chartType,
             formData: this.formData
@@ -217,12 +221,18 @@
       },
       // 监听父级传过来的数据
       tableColumnAndProp: {
-        handler (val) {
-          const {tableColumn, tablePropData, type, formData} = val
+        handler (val, oldName) {
+          if (JSON.stringify(val) === '{}') return
+          const {tableColumn, tablePropData, authorityMenu} = val
           this.tableConfig.tableColumn = tableColumn
           this.tableConfig.tablePropData = tablePropData && tablePropData.data
-          this.formData = Object.assign(this.formData, formData)
-          this.handleChart(this.chartType || type)
+          this.formData = Object.assign({}, this.editFormData)
+          if (authorityMenu.length > 0) {
+            this.navMenuList = navMenuList.filter(item => item.value === 'all' || authorityMenu.includes(item.value))
+          } else {
+            this.navMenuList = navMenuList
+          }
+          this.handleChart(this.editType)
         },
         deep: true, // 对象内部的属性监听，也叫深度监听
         immediate: true
@@ -230,9 +240,37 @@
     },
     created () {
     },
-    mounted () {
+    async mounted () {
+      try {
+        await this.getMapData()
+      } catch (e) {
+        console.error(e)
+      }
     },
     methods: {
+      // 请求那个具体地区
+      getMapData () {
+        let params = JSON.parse(this.$route.query.data);
+        return this.$api.xHttp
+          .get(
+            this.$interfaces.reportManger.getMapInfo,
+            {eventsId: params.eventsId},
+            {
+              isForm: false,
+            }
+          )
+          .then((data) => {
+            if (data.success) {
+              let params = data.data.info
+              echarts.registerMap('demo', params);
+              return true
+            } else {
+              this.$message.error(data.msg);
+            }
+          })
+          .catch((error) => {
+          });
+      },
       // 获取echarts类型
       handleTypeCharts (item) {
         this.activeNav = item.value
@@ -324,7 +362,9 @@
       handleKeywordChart (type) {
         let keywordConfig = JSON.parse(JSON.stringify(this.keywordConfig));
         keywordConfig = handlerChartsData.setKeyWord(this.tableConfig, keywordConfig, this.formData);
-        this.optionConfig = handlerChartsOptionConfig.drawKeywordChart(keywordConfig)
+        this.$nextTick(() => {
+          this.optionConfig = handlerChartsOptionConfig.drawKeywordChart(keywordConfig)
+        })
       },
       // 处理地图
       handleMapConfig (item) {

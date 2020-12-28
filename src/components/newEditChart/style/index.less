@@ -1,11 +1,9 @@
-* {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
 .chart-edit .el-dialog {
   border: 1px solid #EBEDF0;
   box-shadow: 0 0 20px 0 rgba(195, 198, 204, 0.5);
+}
+.chart-edit .chart-db-col-left {
+  max-height: 500px;
 }
 .chart-wrapper {
   display: flex;
@@ -35,17 +33,7 @@
   }
 }
 
-.chart-db-col-left {
-  padding: 30px 0;
-  flex: 1;
-  margin-right: 30px;
-  border: 1px solid #EBEDF0;
-  .el-button {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-  }
-}
+
 .chart-db-col-right {
   width: 490px;
   border: 1px solid #EBEDF0;
@@ -57,6 +45,7 @@
       display: flex;
       flex-direction: column;
       border-right: 1px solid #EBEDF0;
+      text-align: center;
       li {
         padding: 13px 0;
         font-size: 14px;
@@ -70,24 +59,29 @@
     .chart-content {
       height: 500px;
       overflow: auto;
-      display: flex;
-      flex-wrap: wrap;
-      flex: 1;
       .menu-item {
+        float: left;
         padding: 10px;
         display: flex;
         flex-direction: column;
         color: #4A4A4D;
         cursor: pointer;
+        text-align: center;
         img {
           width: 100px;
           height: 80px;
           margin-bottom: 14px;
         }
       }
+      &::after {
+        content: '';
+        display: inline-block;
+        clear: both;
+      }
     }
   }
   .formClass {
+    margin-top: 20px;
     width: 80%;
     text-align: left;
   }
@@ -108,6 +102,7 @@
     display: flex;
     .el-tabs__item {
       flex: 1;
+      font-size: 16px;
     }
   }
   .el-collapse-item__wrap {
@@ -118,6 +113,9 @@
       .el-tabs__item.is-active {
         background-color: #F7F8FA;
       }
+    }
+    .el-tabs__nav-scroll {
+      float: none;
     }
   }
   .el-tabs__content {
@@ -144,5 +142,9 @@
       width: 20px;
       height: 14px;
     }
+  }
+  .el-form-item__label {
+    color: #4A4A4D;
+    font-family: Microsoft YaHei;
   }
 }

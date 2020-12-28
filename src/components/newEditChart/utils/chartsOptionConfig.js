@@ -19,7 +19,6 @@ export class handlerChartsOptionConfig {
     {
       color = ["#3699D2", "#EB5974"],
       legendLeft = 20,
-      legendTop = 0,
       legendRight = 0,
       legendData = ["全部", "负面"],
       fontSize,
@@ -47,21 +46,14 @@ export class handlerChartsOptionConfig {
       grid: {
         left: '5%',
         right: '5%',
-        top: 80,
+        top: 120,
         bottom: 30,
         containLabel: true
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {
-            title: "下载"
-          },
-        }
       },
       legend: {
         show: true,
         left: legendLeft,
-        top: legendTop,
+        top: 30,
         right: legendRight,
         icon: "circle",
         data: legendData,
@@ -71,10 +63,16 @@ export class handlerChartsOptionConfig {
         {
           type: "category",
           boundaryGap: false,
-          axisLabel: {
-            textStyle: {
-              fontSize: fontSize || "16"
-            }
+          axisTick: {
+            show: false,
+          },
+          nameTextStyle: {
+            fontSize: 14,
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#9298A2",
+            },
           },
           data: xAxisData || []
         }
@@ -86,11 +84,23 @@ export class handlerChartsOptionConfig {
             show: hideGrid
           },
           splitArea: {show: false}, //去除网格区域
+          nameTextStyle: {
+            fontSize: 14,
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+            show: false,
+            lineStyle: {
+              color: "#9298A2",
+            },
+          },
           axisLabel: {
-            textStyle: {
-              fontSize: "18"
-            }
-          }
+            formatter: function (v) {
+              return v > 0 ? v : -v;
+            },
+          },
         }
       ],
       series: seriesData
@@ -110,15 +120,15 @@ export class handlerChartsOptionConfig {
     {
       titleTop = 20,
       titleFontSize = "16",
-      legendRight = "0",
-      legendBottom = "50",
+      legendRight = "5%",
+      legendTop = "40",
       legendShow = true,
       legendData = ["直接访问", "邮件营销"],
       center = ["45%", "50%"],
       seriesColor = ["#EFB358", "#F49D1A"],
       seriesRadius = ["45%", "65%"],
       formatter = '{b} {c}条 \n {d}%',
-      labelFontSizeColor = '#333333',
+      labelFontSizeColor = '#999',
       roseType = '',
       chartTitle,
       seriesData = [
@@ -131,54 +141,44 @@ export class handlerChartsOptionConfig {
         trigger: "item",
         formatter: "{b}: {c} ({d}%)"
       },
-      toolbox: {
-        feature: {
-          saveAsImage: {
-            title: '下载'
-          }
-        }
+      grid: {
+        left: "5%",
+        right: "5%",
       },
       title: {
         top: titleTop || 30,
         text: chartTitle,
-        // textStyle: {
-        //   fontWeight: "bold",
-        //   fontSize: titleFontSize || 16
-        // },
         left: 'center',
       },
       legend: {
         show: legendShow,
         orient: "vertical",
         icon: "circle",
-        bottom: legendBottom || 50,
-        right: legendRight || 0,
+        top: legendTop || 20,
+        right: legendRight || '5%',
         data: legendData || ["直接访问", "邮件营销"],
       },
       series: [
         {
+          animation: false,
           type: "pie",
           center: center || ["45%", "50%"],
           radius: seriesRadius,
           color: seriesColor || ["#000", "#000"],
           label: {
             normal: {
-              color: labelFontSizeColor,
-              fontWeight: 'bolder', // 如10%
               trigger: "item",
               show: !!formatter,
               formatter: formatter,
-              textStyle: {
-                fontSize: 18    //文字的字体大小
-              },
+              padding: [10, 0],
+              fontSize: 16,
             }
           },
           labelLine: {
             normal: {
-              length: 15,
-              length2: 20,
+              length: 10,
+              length2: 10,
               lineStyle: {
-                color: labelFontSizeColor ? '#999' : null,
                 fontWeight: 'bolder'
               }
             }
@@ -209,16 +209,6 @@ export class handlerChartsOptionConfig {
       chartTitle
     }
   ) {
-    function handlerFormatter (val) {
-      if (!val) {
-        return val;
-      }
-      if (true) {
-        return val
-      } else {
-        return val.length > 8 ? val.substring(0, 8).split('').join('\n') + '\n...' : val.split('').join('\n');
-      }
-    }
     let series = []
     seriesData.forEach((item, index) => {
       let val = item.map(item => ({value: item}))
@@ -242,8 +232,8 @@ export class handlerChartsOptionConfig {
         label: {
           normal: {
             show: labelShow,
-            fontSize: 18,
-            color: '#333',
+            fontSize: 14,
+            color: '#9298A2',
             position: 'top',
           }
         },
@@ -253,13 +243,6 @@ export class handlerChartsOptionConfig {
       title: {
         left: 'center',
         text: chartTitle,
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {
-            title: '下载'
-          }
-        }
       },
       color: seriesColor,
       tooltip: {
@@ -280,16 +263,37 @@ export class handlerChartsOptionConfig {
       },
       xAxis: [
         {
+          nameTextStyle: {
+            color: '#9298A2',
+            fontSize: 14,
+          },
+          color: "#59588D",
           type: 'category',
           data: xAxisData,
-          axisLabel: {
-            interval: 0,
-            textStyle: {
-              fontSize: '18',
+          axisLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          splitLine: {
+            lineStyle: {
+              type: "dashed",
+              color: '#9298A2',
             },
-            formatter (val) {
-              return handlerFormatter(val)
-            }
+          },
+          axisLabel: {
+            margin: 15,
+            color: '#9298A2',
+            interval: 0,
+            rotate: 40,
+            textStyle: {
+              fontSize: 14,
+              fontFamily: "微软雅黑",
+            },
+            // formatter (val) {
+            //   return val.length > 8 ? val.substring(0, 8).split('').join('\n') + '\n...' : val.split('').join('\n');
+            // }
           }
         },
       ],
@@ -297,13 +301,20 @@ export class handlerChartsOptionConfig {
         {
           type: "value",
           splitLine: {
-            show: hideGrid
+            show: hideGrid,
           },
           axisLabel: {
+            formatter: "{value}",
+            color: '#9298A2',
             textStyle: {
-              fontSize: '18',
+              fontSize: 14
             },
-          }
+          },
+          axisLine: {//y轴线的颜色以及宽度
+            lineStyle: {
+              color: '#9298A2',
+            },
+          },
         }
       ],
       series: series
@@ -339,13 +350,6 @@ export class handlerChartsOptionConfig {
       title: {
         left: 'center',
         text: chartTitle,
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {
-            title: '下载'
-          }
-        }
       },
       width: "90%",
       grid: {
@@ -413,10 +417,7 @@ export class handlerChartsOptionConfig {
           },
           itemStyle: {
             normal: {
-              color: (params) => {
-                let colors = axisColor
-                return colors[params.dataIndex]
-              }, //每个数据的颜色
+              color: axisColor[0], //每个数据的颜色
               barBorderRadius: [30, 30, 30, 30], //圆角大小
               shadowBlur: 10,
               shadowColor: 'rgba(0, 103, 255, 0.2)',
@@ -469,13 +470,6 @@ export class handlerChartsOptionConfig {
       },
       tooltip: {
         show: true
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {
-            title: "下载"
-          }
-        }
       },
       series: [{
         type: "wordCloud",
@@ -582,13 +576,6 @@ export class handlerChartsOptionConfig {
       tooltip: {
         trigger: "item",
         triggerOn: "mousemove"
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {
-            title: "下载"
-          }
-        }
       },
       series: [
         {
