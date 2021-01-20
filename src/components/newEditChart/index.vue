@@ -41,6 +41,7 @@
         type: Boolean,
         default: false
       },
+      // 表格数据
       tableColumn: {
         type: Array,
         default: () => {
@@ -56,6 +57,7 @@
           },]
         }
       },
+      // 定义表格表头以及样式内容
       tablePropData: {
         type: Object,
         default: () => {
@@ -72,18 +74,25 @@
           }
         }
       },
+      // 默认类型
       type: {
         type: Object,
         default: () => {
-          return {}
+          return {
+            label: '折线图',
+            value: 'line-1',
+            father: 'line',
+          }
         }
       },
+      // 初始化属性
       formData: {
         type: Object,
         default: () => {
           return {}
         }
       },
+      // 对图表导航进行权限处理
       authorityMenu: {
         type: Array,
         default: () => {
