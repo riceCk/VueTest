@@ -1,12 +1,4 @@
 <template>
-  <!--<el-drawer-->
-    <!--:wrapperClosable="false"-->
-    <!--class="chart-edit"-->
-    <!--:with-header="false"-->
-    <!--:visible="dialogVisible"-->
-    <!--size="85%"-->
-    <!--@close="onClose"-->
-  <!--&gt;-->
   <section class="chart-edit">
     <section class="chart-wrapper">
       <collapseLeft
@@ -30,8 +22,6 @@
       <el-button type="primary" @click="onClose">取消</el-button>
     </section>
   </section>
-  <!--</el-drawer>-->
-
 </template>
 
 <script>

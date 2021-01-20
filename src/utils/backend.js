@@ -93,6 +93,7 @@ function request(settings) {
 
     api = getApiConf(api);
     let url = getUrl(api);
+    debugger
     let isFormData = api.isFormData// true 表单类型，false对象类型
     let isDataAsQuery = (api.method === 'get' || api.method === 'delete') && !query && data;
     if (isDataAsQuery) {

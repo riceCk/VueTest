@@ -242,13 +242,13 @@
     },
     async mounted () {
       try {
-        await this.getMapData()
+        // await this.getMapData()
       } catch (e) {
         console.error(e)
       }
     },
     methods: {
-      // 请求那个具体地区
+      // 请求那个具体地区需要接口调用，dome暂不满足
       getMapData () {
         let params = JSON.parse(this.$route.query.data);
         return this.$api.xHttp

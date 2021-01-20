@@ -1,7 +1,7 @@
 export default [
   {
     path: '/',
-    component: 'Home',
+    component: 'Grid',
     label: '首頁'
   },
   {
