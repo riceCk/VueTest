@@ -29,4 +29,9 @@ export default [
     component: 'Table',
     label: 'xxxx'
   },
+  {
+    path: 'turn',
+    component: 'Turn',
+    label: 'Turn'
+  },
 ]

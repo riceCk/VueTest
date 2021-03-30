@@ -28,19 +28,19 @@
         dialogVisible: false,
         tableColumn: [
           {
-            label: "",
-            prop: "YData",
+            label: "地域",
+            prop: "name",
           },
           {
-            label: "11/11",
+            label: "非敏感",
             prop: "data1",
           },
           {
-            label: "11/12",
+            label: "敏感",
             prop: "data2",
           },
           {
-            label: "11/13",
+            label: "总机",
             prop: "data3",
           },
         ],

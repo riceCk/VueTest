@@ -23,6 +23,7 @@
     "jquery": "^3.5.1",
     "register-service-worker": "^1.7.1",
     "trtc-js-sdk": "^4.4.0",
+    "turn-js": "^0.5.4",
     "uri-js": "^4.2.2",
     "vcolorpicker": "^1.0.1",
     "video.js": "^7.8.2",
@@ -52,6 +53,7 @@
     "shelljs": "^0.8.4",
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.5",
+    "vue-flip-page": "^1.0.7",
     "vue-property-decorator": "^9.0.0",
     "vue-template-compiler": "^2.6.11"
   },
