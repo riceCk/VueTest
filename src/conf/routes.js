@@ -34,4 +34,9 @@ export default [
     component: 'Turn',
     label: 'Turn'
   },
+  {
+    path: 'bigScreen',
+    component: 'bigScreen',
+    label: 'bigScreen'
+  }
 ]
