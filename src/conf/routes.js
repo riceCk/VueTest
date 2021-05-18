@@ -38,5 +38,15 @@ export default [
     path: 'bigScreen',
     component: 'bigScreen',
     label: 'bigScreen'
+  },
+  {
+    path: 'H5List',
+    component: 'H5List',
+    label: 'H5List'
+  },
+  {
+    path: 'MonacoEditor',
+    component: 'MonacoEditor',
+    label: 'MonacoEditor'
   }
 ]

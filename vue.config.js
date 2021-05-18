@@ -161,5 +161,4 @@ module.exports = {
 
   // 可以用来传递任何第三方插件选项
   pluginOptions: {},
-
 };

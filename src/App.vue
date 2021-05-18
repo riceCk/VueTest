@@ -4,6 +4,8 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/turn">turn</router-link> |
       <router-link to="/bigScreen">bigScreen</router-link>
+      <router-link to="/H5List">H5List</router-link>
+      <router-link to="/MonacoEditor">MonacoEditor</router-link>
     </div>
     <router-view/>
   </div>

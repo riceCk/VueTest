@@ -14,17 +14,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-      userItems: [], //下拉数组
-      formData: {
-        //下拉参数
-        pageIndex: 1,
-        pageSize: 20
-      },
-      users: [] //总数组
-    };
-  },
   directives: {
     "el-select-loadmore": {
       bind(el, binding) {
@@ -49,6 +38,17 @@ export default {
       }
     }
   },
+  data() {
+      return {
+        userItems: [], //下拉数组
+        formData: {
+          //下拉参数
+          pageIndex: 1,
+          pageSize: 20
+        },
+        users: [] //总数组
+      };
+    },
   mounted() {
     this.getList(this.formData);
   },
