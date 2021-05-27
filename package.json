@@ -13,7 +13,7 @@
     "@handsontable-pro/vue": "^3.1.1",
     "@handsontable/react": "^4.0.0",
     "@handsontable/vue": "^5.1.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.4",
     "echarts": "^4.8.0",
     "echarts-wordcloud": "^1.1.3",
