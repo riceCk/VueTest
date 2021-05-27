@@ -1,5 +1,9 @@
 <template>
   <div>
+    <vue-msg ref="msg"></vue-msg>
+    <vue-button type="warn">警告</vue-button>
+    <vue-button type="error">错误</vue-button>
+    <vue-button type="warn">默认</vue-button>
     <newEditChart
       @handleEditChart="handleEditChart"
       :tableColumn="tableColumn"

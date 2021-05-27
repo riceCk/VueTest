@@ -12,6 +12,9 @@ import echarts from 'echarts'
 import Video from 'video.js'
 import 'video.js/dist/video-js.css'
 import VueExcelEditor from 'vue-excel-editor'
+import vueMsg from 'vue-msg-plugin-ck'
+
+
 
 Vue.prototype.$video = Video
 Vue.config.productionTip = false
@@ -31,6 +34,7 @@ Object.defineProperty(Vue.prototype, '$api', {
 Vue.use(vcolorpicker)
 Vue.use(ElementUI);
 Vue.use(VueExcelEditor)
+Vue.use(vueMsg)
 
 new Vue({
   router,

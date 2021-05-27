@@ -34,6 +34,7 @@
     "vue-editexcel_table": "^0.1.4",
     "vue-excel-editor": "^1.3.88",
     "vue-grid-layout": "^2.3.7",
+    "vue-msg-plugin-ck": "^0.1.1",
     "vue-router": "^3.1.6",
     "vue-ueditor-wrap": "^2.4.2",
     "vue-willtable": "^2.0.3",
