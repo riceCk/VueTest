@@ -54,7 +54,7 @@
     "http-proxy-middleware": "^1.0.4",
     "less": "^3.12.2",
     "less-loader": "^6.2.0",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.5",
     "vue-flip-page": "^1.0.7",
